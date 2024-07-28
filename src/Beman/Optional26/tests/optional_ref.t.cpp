@@ -553,3 +553,57 @@ TEST(OptionalRefTest, SwapNullIntializedWithValue) {
     EXPECT_EQ(o1.value(), 42);
     EXPECT_TRUE(!o2.has_value());
 }
+
+TEST(OptionalRefRefTest, Constructors) {
+    beman::optional26::optional<int&&> i1;
+    beman::optional26::optional<int&&> i2{beman::optional26::nullopt};
+    std::ignore = i1;
+    std::ignore = i2;
+
+    int                               i  = 0;
+    beman::optional26::optional<int&&> i3 = i;
+    std::ignore = i3;
+
+    using beman::optional26::tests::empty;
+
+    beman::optional26::optional<empty&&> e1;
+    beman::optional26::optional<empty&&> e2{beman::optional26::nullopt};
+    std::ignore = e1;
+    std::ignore = e2;
+
+    empty                               e{};
+    beman::optional26::optional<empty&&> e3 = e;
+    std::ignore = e3;
+
+    using beman::optional26::tests::no_default_ctor;
+
+    beman::optional26::optional<no_default_ctor&&> nd1;
+    beman::optional26::optional<no_default_ctor&&> nd2{beman::optional26::nullopt};
+    std::ignore = nd1;
+    std::ignore = nd2;
+
+    no_default_ctor nd{e};
+
+    beman::optional26::optional<no_default_ctor&&> nd3 = nd;
+    std::ignore = nd3;
+
+    beman::optional26::optional<int&&> ie;
+    beman::optional26::optional<int&&> i4 = ie;
+    EXPECT_FALSE(i4);
+
+    using beman::optional26::tests::base;
+    using beman::optional26::tests::derived;
+
+    base                               b{1};
+    derived                            d(1, 2);
+    beman::optional26::optional<base&&> b1 = b;
+    beman::optional26::optional<base&&> b2 = d;
+
+    beman::optional26::optional<derived&&> d2 = d;
+    beman::optional26::optional<base&&>    b3 = d2;
+    beman::optional26::optional<base&&>    b4{d2};
+
+    beman::optional26::optional<derived&&> empty;
+    beman::optional26::optional<base&&>    fromEmpty(empty);
+    beman::optional26::optional<base&&>    fromEmpty2 = empty;
+}
