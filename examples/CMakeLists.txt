@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 # cmake-format: on
 
-set(BEMAN_OPTIONAL26_LIBRARY "beman_optional26")
+set(BEMAN_OPTIONAL26_LIBRARY "beman::optional26")
 
 include(GNUInstallDirs)
 

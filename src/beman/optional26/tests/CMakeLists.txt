@@ -25,7 +25,7 @@ target_sources(
 target_link_libraries(
   beman_optional26_test
   PRIVATE
-  beman_optional26
+  beman::optional26
   GTest::gtest
   GTest::gtest_main)
 
