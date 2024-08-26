@@ -4,7 +4,7 @@
 #ifndef BEMAN_OPTIONAL26_DETAIL_ITERATOR_HPP
 #define BEMAN_OPTIONAL26_DETAIL_ITERATOR_HPP
 
-#include <Beman/Optional26/detail/stl_interfaces/iterator_interface.hpp>
+#include <beman/optional26/detail/stl_interfaces/iterator_interface.hpp>
 
 #include <concepts>
 #include <iterator>
