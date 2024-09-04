@@ -304,7 +304,7 @@ class optional {
     }
 
     constexpr void hard_reset() noexcept {
-        value_.~T();
+        std::destroy_at(std::addressof(value_));
         engaged_ = false;
     }
 
@@ -320,7 +320,7 @@ class optional {
         requires(!std::is_trivially_destructible_v<T>)
     {
         if (has_value())
-            value_.~T();
+            std::destroy_at(std::addressof(value_));
     }
 
     constexpr ~optional()
@@ -460,6 +460,7 @@ class optional {
             return value_;
         throw bad_optional_access();
     }
+
     constexpr const T& value() const& {
         if (has_value())
             return value_;
@@ -682,12 +683,11 @@ class optional {
                 swap(value(), *rhs);
             } else {
                 std::construct_at(std::addressof(rhs.value_), std::move(value_));
-                value_.T::~T();
+                std::destroy_at(std::addressof(value_));
             }
         } else if (rhs.has_value()) {
-
             std::construct_at(std::addressof(value_), std::move(rhs.value_));
-            rhs.value_.T::~T();
+            std::destroy_at(std::addressof(rhs.value_));
         }
         swap(engaged_, rhs.engaged_);
     }
@@ -721,7 +721,7 @@ class optional {
     constexpr void reset() noexcept {
         if constexpr (!std::is_trivially_destructible_v<T>) {
             if (has_value())
-                value_.~T();
+                std::destroy_at(std::addressof(value_));
         }
         engaged_ = false;
     }
@@ -939,6 +939,13 @@ auto optional_map_impl(Opt&& opt, F&& f)
 /* optional<T&> */
 /****************/
 
+namespace detail {
+template<class T>
+struct ref_holder {
+    T& t_;
+    constexpr ref_holder(T& t): t_(t) {}
+};
+}
 template <class T>
 class optional<T&> {
   public:
@@ -1016,21 +1023,51 @@ class optional<T&> {
     // constexpr void reset() noexcept;
 
   private:
-    T* value_; // exposition only
+    //    T* value_; // exposition only
+    struct empty {};
+    union {
+        empty _{};
+        detail::ref_holder<T> value_;
+    };
+    bool engaged_ = false;
+
 
   public:
     //  \rSec3[optional.ctor]{Constructors}
 
-    constexpr optional() noexcept : value_(nullptr) {}
+    constexpr optional() noexcept : _(), engaged_(false) {}
 
-    constexpr optional(nullopt_t) noexcept : value_(nullptr) {}
+    constexpr optional(nullopt_t) noexcept {}
 
-    constexpr optional(const optional& rhs) noexcept = default;
-    constexpr optional(optional&& rhs) noexcept      = default;
+    constexpr optional(const optional& rhs) noexcept {
+        if (rhs.has_value()) {
+            std::construct_at(std::addressof(value_), rhs.value_.t_);
+            engaged_ = true;
+        }
+    }
+
+    constexpr optional(optional&& rhs) noexcept {
+        if (rhs.has_value()) {
+            std::construct_at(std::addressof(value_), rhs.value_.t_);
+            engaged_ = true;
+        }
+    }
+
+    /// Constructs the stored value in-place using the given arguments.
+    template <class... Args>
+    constexpr explicit optional(in_place_t, Args&&... args)
+        requires std::is_constructible_v<T, Args...>
+        : value_(std::forward<Args>(args)...), engaged_(true) {}
+
+    template <class U, class... Args>
+    constexpr explicit optional(in_place_t, std::initializer_list<U> il, Args&&... args)
+        requires std::is_constructible_v<T, std::initializer_list<U>&, Args&&...>
+        : value_(il, std::forward<Args>(args)...), engaged_(true) {}
 
     template <class U = T>
         requires(!detail::is_optional<std::decay_t<U>>)
-    constexpr explicit(!std::is_convertible_v<U, T>) optional(U&& u) noexcept : value_(std::addressof(u)) {
+    constexpr explicit(!std::is_convertible_v<U, T>) optional(U&& u) noexcept
+        : optional(in_place, std::forward<U>(u)) {
         static_assert(std::is_constructible_v<std::add_lvalue_reference_t<T>, U>, "Must be able to bind U to T&");
         static_assert(std::is_lvalue_reference<U>::value, "U must be an lvalue");
     }
@@ -1038,15 +1075,24 @@ class optional<T&> {
     template <class U>
     constexpr explicit(!std::is_convertible_v<U, T>) optional(const optional<U>& rhs) noexcept {
         static_assert(std::is_constructible_v<std::add_lvalue_reference_t<T>, U>, "Must be able to bind U to T&");
-        if (rhs.has_value())
-            value_ = std::to_address(rhs);
-        else
-            value_ = nullptr;
+        if (rhs.has_value()) {
+            std::construct_at(std::addressof(value_), rhs.value());
+            engaged_ = true;
+        }
     }
 
     //  \rSec3[optional.dtor]{Destructor}
 
-    constexpr ~optional() = default;
+    constexpr ~optional()
+        requires(!std::is_trivially_destructible_v<T>)
+    {
+        if (has_value())
+            std::destroy_at(std::addressof(value_));
+    }
+
+    constexpr ~optional()
+        requires std::is_trivially_destructible_v<T>
+    = default;
 
     // \rSec3[optional.assign]{Assignment}
 
@@ -1055,25 +1101,42 @@ class optional<T&> {
         return *this;
     }
 
-    constexpr optional& operator=(const optional& rhs) noexcept = default;
-    constexpr optional& operator=(optional&& rhs) noexcept      = default;
+    constexpr optional& operator=(const optional& rhs) noexcept {
+        reset();
+        if (rhs.has_value()) {
+            std::construct_at(std::addressof(value_), rhs.value());
+            engaged_ = true;
+        }
+        return *this;
+    }
+    constexpr optional& operator=(optional&& rhs) noexcept {
+        reset();
+        if (rhs.has_value()) {
+            std::construct_at(std::addressof(value_), rhs.value());
+            engaged_ = true;
+        }
+        return *this;
+    };
 
     template <class U = T>
         requires(!detail::is_optional<std::decay_t<U>>)
     constexpr optional& operator=(U&& u) {
         static_assert(std::is_constructible_v<std::add_lvalue_reference_t<T>, U>, "Must be able to bind U to T&");
         static_assert(std::is_lvalue_reference<U>::value, "U must be an lvalue");
-        value_ = std::addressof(u);
+        reset();
+        std::construct_at(std::addressof(value_), std::forward<decltype(u)>(u));
+        engaged_ = true;
         return *this;
     }
 
     template <class U>
     constexpr optional& operator=(const optional<U>& rhs) noexcept {
         static_assert(std::is_constructible_v<std::add_lvalue_reference_t<T>, U>, "Must be able to bind U to T&");
-        if (rhs.has_value())
-            value_ = std::to_address(rhs);
-        else
-            value_ = nullptr;
+        reset();
+        if (rhs.has_value()) {
+            std::construct_at(std::addressof(value_), rhs.value());
+            engaged_ = true;
+        }
         return *this;
     }
 
@@ -1088,28 +1151,46 @@ class optional<T&> {
 
     //   \rSec3[optional.swap]{Swap}
 
-    constexpr void swap(optional& rhs) noexcept { std::swap(value_, rhs.value_); }
-
+    constexpr void swap(optional& rhs) noexcept {
+        if (has_value()) {
+            detail::ref_holder r{value_.t_};
+            reset();
+            if (rhs.has_value()) {
+                std::construct_at(std::addressof(value_), rhs.value());
+                engaged_ = true;
+            }
+            std::construct_at(std::addressof(rhs.value_), r);
+            rhs.engaged_ = true;
+        } else {
+            if (rhs.has_value()){
+                std::construct_at(std::addressof(value_), rhs.value());
+                engaged_ = true;
+            }
+            rhs.reset();
+        }
+    }
     // Since ${PAPER_NUMBER}: ${PAPER_TITLE}.
     // Note: P3168 and P2988 may have different flows inside LEWG/LWG.
     // Implementation of the range support for optional<T&> reflects P3168R2 for now.
     // [optional.iterators], iterator support
-    constexpr iterator       begin() noexcept { return iterator(has_value() ? value_ : nullptr); };
-    constexpr const_iterator begin() const noexcept { return const_iterator(has_value() ? value_ : nullptr); };
+    constexpr iterator       begin() noexcept { return iterator(has_value() ? std::addressof(value_.t_) : nullptr); };
+    constexpr const_iterator begin() const noexcept {
+        return const_iterator(has_value() ? std::addressof(value_.t_) : nullptr);
+    };
     constexpr iterator       end() noexcept { return begin() + has_value(); }
     constexpr const_iterator end() const noexcept { return begin() + has_value(); }
 
     // \rSec3[optional.observe]{Observers}
-    constexpr T* operator->() const noexcept { return value_; }
+    constexpr T* operator->() const noexcept { return std::addressof(value_.t_); }
 
-    constexpr T& operator*() const noexcept { return *value_; }
+    constexpr T& operator*() const noexcept { return value_.t_; }
 
-    constexpr explicit operator bool() const noexcept { return value_ != nullptr; }
-    constexpr bool     has_value() const noexcept { return value_ != nullptr; }
+    constexpr explicit operator bool() const noexcept { return engaged_; }
+    constexpr bool     has_value() const noexcept { return engaged_; }
 
     constexpr T& value() const {
         if (has_value())
-            return *value_;
+            return value_.t_;
         throw bad_optional_access();
     }
 
@@ -1117,7 +1198,7 @@ class optional<T&> {
     constexpr T value_or(U&& u) const {
         static_assert(std::is_constructible_v<std::add_lvalue_reference_t<T>, decltype(u)>,
                       "Must be able to bind u to T&");
-        return has_value() ? *value_ : std::forward<U>(u);
+        return has_value() ? value_.t_ : std::forward<U>(u);
     }
 
     //   \rSec3[optional.monadic]{Monadic operations}
@@ -1126,25 +1207,30 @@ class optional<T&> {
     constexpr auto and_then(F&& f) const {
         using U = std::invoke_result_t<F, T&>;
         static_assert(detail::is_optional<U>, "F must return an optional");
-        return (has_value()) ? std::invoke(std::forward<F>(f), *value_) : std::remove_cvref_t<U>();
+        return (has_value()) ? std::invoke(std::forward<F>(f), value_.t_) : std::remove_cvref_t<U>();
     }
 
     template <class F>
     constexpr auto transform(F&& f) const -> optional<std::invoke_result_t<F, T&>> {
         using U = std::invoke_result_t<F, T&>;
-        return (has_value()) ? optional<U>{std::invoke(std::forward<F>(f), *value_)} : optional<U>{};
+        return (has_value()) ? optional<U>{std::invoke(std::forward<F>(f), value_.t_)} : optional<U>{};
     }
 
     template <class F>
     constexpr optional or_else(F&& f) const {
         using U = std::invoke_result_t<F>;
         static_assert(std::is_same_v<std::remove_cvref_t<U>, optional>);
-        return has_value() ? *value_ : std::forward<F>(f)();
+        return has_value() ? value_.t_ : std::forward<F>(f)();
     }
 
-    constexpr void reset() noexcept { value_ = nullptr; }
+    constexpr void reset() noexcept {
+        if constexpr (!std::is_trivially_destructible_v<T>) {
+            if (has_value())
+                std::destroy_at(std::addressof(value_));
+        }
+        engaged_ = false;
+    }
 };
-
 } // namespace beman::optional26
 
 #endif // BEMAN_OPTIONAL26_OPTIONAL_HPP
