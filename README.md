@@ -4,7 +4,7 @@
 SPDX-License-Identifier: 2.0 license with LLVM exceptions
 -->
 
-![CI Tests](https://github.com/bemanproject/optional26/actions/workflows/ci.yml/badge.svg)
+![CI Tests](https://github.com/bemanproject/optional26/actions/workflows/ci.yml/badge.svg) [![Coverage](https://coveralls.io/repos/github/bemanproject/optional26/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/optional26?branch=main)
 
 This repository implements `std::optional` extensions targeting C++26. The `beman.optional26` library aims to evaluate
 the stability, the usability, and the performance of these proposed changes before they are officially adopted by WG21
@@ -141,7 +141,7 @@ apt-get install -y cmake make ninja-build
 
 # Example of toolchains:
 apt-get install                           \
-  g++-14 gcc-14 gcc-13 g++-14             \
+  g++-14 gcc-14 gcc-13 g++-13             \
   clang-18 clang++-18 clang-17 clang++-17
 ```
 
@@ -162,8 +162,12 @@ Available workflow presets:
   "system"
   "gcc-14"
   "gcc-13"
+  "gcc-12"
+  "clang-20"
+  "clang-19"
   "clang-18"
   "clang-17"
+  "clang-16"
 
 # Run examples:
 $ cmake --workflow --preset gcc-14
