@@ -488,7 +488,7 @@ inline constexpr optional<T>::optional(optional<U>&& rhs)
     requires detail::enable_from_other<T, U, U&&> && std::is_convertible_v<U&&, T>
 {
     if (rhs.has_value()) {
-        construct(std::move(*rhs));
+        construct(*std::move(rhs));
     }
 }
 
@@ -498,7 +498,7 @@ inline constexpr optional<T>::optional(optional<U>&& rhs)
     requires detail::enable_from_other<T, U, U&&> && (!std::is_convertible_v<U &&, T>)
 {
     if (rhs.has_value()) {
-        construct(std::move(*rhs));
+        construct(*std::move(rhs));
     }
 }
 
@@ -594,14 +594,14 @@ inline constexpr optional<T>& optional<T>::operator=(optional<U>&& rhs)
 {
     if (has_value()) {
         if (rhs.has_value()) {
-            value_ = std::move(*rhs);
+            value_ = *std::move(rhs);
         } else {
             hard_reset();
         }
     }
 
     else if (rhs.has_value()) {
-        construct(std::move(*rhs));
+        construct(*std::move(rhs));
     }
 
     return *this;

@@ -868,3 +868,42 @@ TEST(OptionalTest, HashTest) {
         EXPECT_EQ(h1, h2);
     }
 }
+
+// Moving an `optional<T&>` should not move the remote value.
+// Check this by deleting the rvalue overloads of some (unrealistic) types.
+TEST(OptionalTest, MoveRef) {
+    struct copyable_but_not_movable {
+        explicit copyable_but_not_movable()                                  = default;
+        copyable_but_not_movable(const copyable_but_not_movable&)            = default;
+        copyable_but_not_movable(copyable_but_not_movable&&)                 = delete;
+        copyable_but_not_movable& operator=(const copyable_but_not_movable&) = default;
+        copyable_but_not_movable& operator=(copyable_but_not_movable&&)      = delete;
+    };
+
+    copyable_but_not_movable cm;
+
+    beman::optional26::optional<copyable_but_not_movable&> o1 = cm;
+    ASSERT_TRUE(o1);
+
+    beman::optional26::optional<copyable_but_not_movable> o2 = std::move(o1);
+    ASSERT_TRUE(o2);
+
+    o2 = std::move(o1);
+    ASSERT_TRUE(o2);
+
+    o2.reset();
+    o2 = std::move(o1);
+    ASSERT_TRUE(o2);
+
+    struct explicitly_convertible_to_cbnm {
+        explicit operator copyable_but_not_movable() const& { return copyable_but_not_movable{}; }
+        explicit operator copyable_but_not_movable() && = delete;
+    };
+
+    explicitly_convertible_to_cbnm ec;
+
+    beman::optional26::optional<explicitly_convertible_to_cbnm&> o3 = ec;
+
+    beman::optional26::optional<copyable_but_not_movable> o4(std::move(o3));
+    ASSERT_TRUE(o4);
+}
