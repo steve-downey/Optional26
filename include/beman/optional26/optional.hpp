@@ -299,6 +299,8 @@ class optional {
         requires(!std::is_trivially_destructible_v<T>);
 
     // \ref{optional.assign}, assignment
+    constexpr optional& operator=(nullopt_t) noexcept;
+
     constexpr optional& operator=(const optional& rhs)
         requires std::is_copy_constructible_v<T> && std::is_copy_assignable_v<T> &&
                  (!std::is_trivially_copy_assignable_v<T>);
@@ -513,6 +515,12 @@ inline constexpr optional<T>::~optional()
 }
 
 // 22.5.3.4 Assignment[optional.assign]
+
+template <class T>
+inline constexpr optional<T>& optional<T>::operator=(nullopt_t) noexcept {
+    reset();
+    return *this;
+}
 
 template <class T>
 inline constexpr optional<T>& optional<T>::operator=(const optional<T>& rhs)
