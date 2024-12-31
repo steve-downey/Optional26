@@ -520,9 +520,8 @@ inline constexpr optional<T>& optional<T>::operator=(const optional<T>& rhs)
         reset();
     else if (has_value())
         value_ = rhs.value_;
-    else {
+    else
         construct(rhs.value_);
-    }
     return *this;
 }
 
@@ -536,9 +535,8 @@ optional<T>::operator=(optional<T>&& rhs) noexcept(std::is_nothrow_move_construc
         reset();
     else if (has_value())
         value_ = std::move(rhs.value_);
-    else {
+    else
         construct(std::move(rhs.value_));
-    }
     return *this;
 }
 
