@@ -424,8 +424,7 @@ inline constexpr optional<T>::optional(const optional& rhs)
     requires std::is_copy_constructible_v<T> && (!std::is_trivially_copy_constructible_v<T>)
 {
     if (rhs.has_value()) {
-        std::construct_at(std::addressof(value_), rhs.value_);
-        engaged_ = true;
+        construct(rhs.value_);
     }
 }
 
@@ -434,8 +433,7 @@ inline constexpr optional<T>::optional(optional&& rhs) noexcept(std::is_nothrow_
     requires std::is_move_constructible_v<T> && (!std::is_trivially_move_constructible_v<T>)
 {
     if (rhs.has_value()) {
-        std::construct_at(std::addressof(value_), std::move(rhs.value()));
-        engaged_ = true;
+        construct(std::move(rhs.value_));
     }
 }
 
@@ -466,8 +464,7 @@ inline constexpr optional<T>::optional(const optional<U>& rhs)
     requires detail::enable_from_other<T, U, const U&> && std::is_convertible_v<const U&, T>
 {
     if (rhs.has_value()) {
-        std::construct_at(std::addressof(value_), rhs.value());
-        engaged_ = true;
+        construct(*rhs);
     }
 }
 
@@ -524,7 +521,7 @@ inline constexpr optional<T>& optional<T>::operator=(const optional<T>& rhs)
     else if (has_value())
         value_ = rhs.value_;
     else
-        std::construct_at(std::addressof(value_), rhs.value_);
+        construct(rhs.value_);
     return *this;
 }
 
@@ -539,7 +536,7 @@ optional<T>::operator=(optional<T>&& rhs) noexcept(std::is_nothrow_move_construc
     else if (has_value())
         value_ = std::move(rhs.value_);
     else
-        std::construct_at(std::addressof(value_), std::move(rhs.value_));
+        construct(std::move(rhs.value_));
     return *this;
 }
 
