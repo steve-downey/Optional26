@@ -900,11 +900,7 @@ TEST(OptionalTest, HashTest) {
 }
 
 TEST(OptionalTest, CanHoldValueOfImmovableType) {
-    struct immovable {
-        explicit immovable()                   = default;
-        immovable(const immovable&)            = delete;
-        immovable& operator=(const immovable&) = delete;
-    };
+    using beman::optional26::tests::immovable;
 
     beman::optional26::optional<immovable> o1(beman::optional26::in_place);
     EXPECT_TRUE(o1);
