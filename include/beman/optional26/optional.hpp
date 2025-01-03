@@ -294,11 +294,11 @@ class optional {
 
     template <class U>
     constexpr explicit(!std::is_convertible_v<U&, T>) optional(const optional<U&>& rhs)
-        requires(detail::enable_from_other<T, U, U&> && std::is_convertible_v<U&, T>);
+        requires(detail::enable_from_other<T, U&, U&> && std::is_convertible_v<U&, T>);
 
     template <class U>
     constexpr explicit(!std::is_convertible_v<U&, T>) optional(const optional<U&>& rhs)
-        requires(detail::enable_from_other<T, U, U&> && !std::is_convertible_v<U&, T>);
+        requires(detail::enable_from_other<T, U&, U&> && !std::is_convertible_v<U&, T>);
 
     // \ref{optional.dtor}, destructor
     constexpr ~optional()
@@ -341,7 +341,7 @@ class optional {
 
     template <class U>
     constexpr optional& operator=(const optional<U&>& rhs)
-        requires(detail::enable_assign_from_other<T, U, U&>);
+        requires(detail::enable_assign_from_other<T, U&, U&>);
 
     template <class... Args>
     constexpr T& emplace(Args&&... args);
@@ -521,7 +521,7 @@ inline constexpr optional<T>::optional(optional<U>&& rhs)
 template <class T>
 template <class U>
 inline constexpr optional<T>::optional(const optional<U&>& rhs)
-    requires(detail::enable_from_other<T, U, U&> && std::is_convertible_v<U&, T>)
+    requires(detail::enable_from_other<T, U&, U&> && std::is_convertible_v<U&, T>)
 {
     if (rhs.has_value()) {
         construct(*rhs);
@@ -531,7 +531,7 @@ inline constexpr optional<T>::optional(const optional<U&>& rhs)
 template <class T>
 template <class U>
 inline constexpr optional<T>::optional(const optional<U&>& rhs)
-    requires(detail::enable_from_other<T, U, U&> && !std::is_convertible_v<U&, T>)
+    requires(detail::enable_from_other<T, U&, U&> && !std::is_convertible_v<U&, T>)
 {
     if (rhs.has_value()) {
         construct(*rhs);
@@ -646,7 +646,7 @@ inline constexpr optional<T>& optional<T>::operator=(optional<U>&& rhs)
 template <class T>
 template <class U>
 inline constexpr optional<T>& optional<T>::operator=(const optional<U&>& rhs)
-    requires(detail::enable_assign_from_other<T, U, U&>)
+    requires(detail::enable_assign_from_other<T, U&, U&>)
 {
     if (has_value()) {
         if (rhs.has_value()) {
