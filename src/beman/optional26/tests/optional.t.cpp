@@ -208,8 +208,38 @@ TEST(OptionalTest, AssignmentValue) {
      */
     beman::optional26::optional<not_trivial_copy_assignable> o5{5};
     beman::optional26::optional<not_trivial_copy_assignable> o6;
+
+    // Copy into empty optional.
     o6 = o5;
-    EXPECT_TRUE(o5->i_ == 5);
+    EXPECT_TRUE(o6);
+    EXPECT_TRUE(o6->i_ == 5);
+
+    // Move into empty optional.
+    o6.reset();
+    o6 = std::move(o5);
+    EXPECT_TRUE(o6);
+    EXPECT_TRUE(o6->i_ == 5);
+
+    // Copy into engaged optional.
+    beman::optional26::optional<not_trivial_copy_assignable> o7{7};
+    o6 = o7;
+    EXPECT_TRUE(o6);
+    EXPECT_TRUE(o6->i_ == 7);
+
+    // Move into engaged optional.
+    beman::optional26::optional<not_trivial_copy_assignable> o8{8};
+    o6 = std::move(o8);
+    EXPECT_TRUE(o6);
+    EXPECT_TRUE(o6->i_ == 8);
+
+    // Copy from empty into engaged optional.
+    o5.reset();
+    o7 = o5;
+    EXPECT_FALSE(o7);
+
+    // Move from empty into engaged optional.
+    o8 = std::move(o5);
+    EXPECT_FALSE(o8);
 }
 
 TEST(OptionalTest, Triviality) {
