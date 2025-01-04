@@ -65,6 +65,12 @@ class Point {
     bool operator==(const Point&) const  = default;
 };
 
+struct immovable {
+    explicit immovable()                   = default;
+    immovable(const immovable&)            = delete;
+    immovable& operator=(const immovable&) = delete;
+};
+
 } // namespace beman::optional26::tests
 
 #endif // BEMAN_OPTIONAL26_TESTS_TEST_TYPES_HPP

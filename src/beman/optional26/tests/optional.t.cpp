@@ -898,3 +898,19 @@ TEST(OptionalTest, HashTest) {
         EXPECT_EQ(h1, h2);
     }
 }
+
+TEST(OptionalTest, CanHoldValueOfImmovableType) {
+    using beman::optional26::tests::immovable;
+
+    beman::optional26::optional<immovable> o1(beman::optional26::in_place);
+    EXPECT_TRUE(o1);
+
+    // ...and can reset it with `nullopt`.
+    static_assert(noexcept(o1 = beman::optional26::nullopt));
+    o1 = beman::optional26::nullopt;
+    EXPECT_FALSE(o1);
+
+    // Also, can construct with `nullopt`.
+    beman::optional26::optional<immovable> o2 = beman::optional26::nullopt;
+    EXPECT_FALSE(o2);
+}
