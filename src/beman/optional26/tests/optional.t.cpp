@@ -11,6 +11,7 @@
 #include <ranges>
 #include <tuple>
 #include <algorithm>
+#include <any>
 
 #include <gtest/gtest.h>
 
@@ -1004,4 +1005,14 @@ TEST(OptionalTest, OptionalFromOptionalConstRefExplicit) {
     ASSERT_TRUE(o4);
     beman::optional26::optional<copyable_from_const_lvalue_only> o5(std::move(o3));
     ASSERT_TRUE(o5);
+}
+
+TEST(OptionalTest, OptionalOfAnyWorks) {
+    beman::optional26::optional<std::any> o1 = 42;
+
+    beman::optional26::optional<std::any> o2 = o1;
+    EXPECT_TRUE(std::any_cast<const int&>(*o2) == 42);
+
+    beman::optional26::optional<std::any> o3 = std::move(o1);
+    EXPECT_TRUE(std::any_cast<const int&>(*o3) == 42);
 }
