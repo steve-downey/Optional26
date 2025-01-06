@@ -202,11 +202,11 @@ concept enable_forward_value = !std::is_same_v<std::decay_t<U>, optional<T>> &&
 
 template <class T, class U, class Other>
 concept enable_from_other =
-    !std::is_same_v<T, U> && std::is_constructible_v<T, Other> && //
-    !std::is_constructible_v<T, optional<U>&> && !std::is_constructible_v<T, optional<U>&&> &&
-    !std::is_constructible_v<T, const optional<U>&> && !std::is_constructible_v<T, const optional<U>&&> &&
-    !std::is_convertible_v<optional<U>&, T> && !std::is_convertible_v<optional<U>&&, T> &&
-    !std::is_convertible_v<const optional<U>&, T> && !std::is_convertible_v<const optional<U>&&, T>;
+    !std::is_same_v<T, U> && std::is_constructible_v<T, Other> && !std::is_constructible_v<T, optional<U>&> &&
+    !std::is_constructible_v<T, optional<U>&&> && !std::is_constructible_v<T, const optional<U>&> &&
+    !std::is_constructible_v<T, const optional<U>&&> && !std::is_convertible_v<optional<U>&, T> &&
+    !std::is_convertible_v<optional<U>&&, T> && !std::is_convertible_v<const optional<U>&, T> &&
+    !std::is_convertible_v<const optional<U>&&, T>;
 
 template <class T, class U>
 concept enable_assign_forward = !std::is_same_v<optional<T>, std::decay_t<U>> &&
