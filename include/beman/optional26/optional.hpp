@@ -276,19 +276,29 @@ class optional {
 
     template <class U>
     constexpr explicit(!std::is_convertible_v<U, T>) optional(const optional<U>& rhs)
-        requires detail::enable_from_other<T, U, const U&> && std::is_convertible_v<const U&, T>;
+        requires(!std::is_reference_v<U> && detail::enable_from_other<T, U, const U&> &&
+                 std::is_convertible_v<const U&, T>);
 
     template <class U>
     constexpr explicit(!std::is_convertible_v<U, T>) optional(const optional<U>& rhs)
-        requires detail::enable_from_other<T, U, const U&> && (!std::is_convertible_v<const U&, T>);
+        requires(!std::is_reference_v<U> && detail::enable_from_other<T, U, const U&> &&
+                 !std::is_convertible_v<const U&, T>);
 
     template <class U>
     constexpr explicit(!std::is_convertible_v<U, T>) optional(optional<U>&& rhs)
-        requires detail::enable_from_other<T, U, U&&> && std::is_convertible_v<U&&, T>;
+        requires(!std::is_reference_v<U> && detail::enable_from_other<T, U, U &&> && std::is_convertible_v<U &&, T>);
 
     template <class U>
     constexpr explicit(!std::is_convertible_v<U, T>) optional(optional<U>&& rhs)
-        requires detail::enable_from_other<T, U, U&&> && (!std::is_convertible_v<U &&, T>);
+        requires(!std::is_reference_v<U> && detail::enable_from_other<T, U, U &&> && !std::is_convertible_v<U &&, T>);
+
+    template <class U>
+    constexpr explicit(!std::is_convertible_v<U&, T>) optional(const optional<U&>& rhs)
+        requires(detail::enable_from_other<T, U&, U&> && std::is_convertible_v<U&, T>);
+
+    template <class U>
+    constexpr explicit(!std::is_convertible_v<U&, T>) optional(const optional<U&>& rhs)
+        requires(detail::enable_from_other<T, U&, U&> && !std::is_convertible_v<U&, T>);
 
     // \ref{optional.dtor}, destructor
     constexpr ~optional()
@@ -299,6 +309,8 @@ class optional {
         requires(!std::is_trivially_destructible_v<T>);
 
     // \ref{optional.assign}, assignment
+    constexpr optional& operator=(nullopt_t) noexcept;
+
     constexpr optional& operator=(const optional& rhs)
         requires std::is_copy_constructible_v<T> && std::is_copy_assignable_v<T> &&
                  (!std::is_trivially_copy_assignable_v<T>);
@@ -323,11 +335,15 @@ class optional {
 
     template <class U>
     constexpr optional& operator=(const optional<U>& rhs)
-        requires detail::enable_assign_from_other<T, U, const U&>;
+        requires(!std::is_reference_v<U> && detail::enable_assign_from_other<T, U, const U&>);
 
     template <class U>
     constexpr optional& operator=(optional<U>&& rhs)
-        requires detail::enable_assign_from_other<T, U, U>;
+        requires(!std::is_reference_v<U> && detail::enable_assign_from_other<T, U, U>);
+
+    template <class U>
+    constexpr optional& operator=(const optional<U&>& rhs)
+        requires(detail::enable_assign_from_other<T, U&, U&>);
 
     template <class... Args>
     constexpr T& emplace(Args&&... args);
@@ -424,8 +440,7 @@ inline constexpr optional<T>::optional(const optional& rhs)
     requires std::is_copy_constructible_v<T> && (!std::is_trivially_copy_constructible_v<T>)
 {
     if (rhs.has_value()) {
-        std::construct_at(std::addressof(value_), rhs.value_);
-        engaged_ = true;
+        construct(rhs.value_);
     }
 }
 
@@ -434,8 +449,7 @@ inline constexpr optional<T>::optional(optional&& rhs) noexcept(std::is_nothrow_
     requires std::is_move_constructible_v<T> && (!std::is_trivially_move_constructible_v<T>)
 {
     if (rhs.has_value()) {
-        std::construct_at(std::addressof(value_), std::move(rhs.value()));
-        engaged_ = true;
+        construct(std::move(rhs.value_));
     }
 }
 
@@ -463,18 +477,19 @@ inline constexpr optional<T>::optional(U&& u)
 template <class T>
 template <class U>
 inline constexpr optional<T>::optional(const optional<U>& rhs)
-    requires detail::enable_from_other<T, U, const U&> && std::is_convertible_v<const U&, T>
+    requires(!std::is_reference_v<U> && detail::enable_from_other<T, U, const U&> &&
+             std::is_convertible_v<const U&, T>)
 {
     if (rhs.has_value()) {
-        std::construct_at(std::addressof(value_), rhs.value());
-        engaged_ = true;
+        construct(*rhs);
     }
 }
 
 template <class T>
 template <class U>
 inline constexpr optional<T>::optional(const optional<U>& rhs)
-    requires detail::enable_from_other<T, U, const U&> && (!std::is_convertible_v<const U&, T>)
+    requires(!std::is_reference_v<U> && detail::enable_from_other<T, U, const U&> &&
+             !std::is_convertible_v<const U&, T>)
 {
     if (rhs.has_value()) {
         construct(*rhs);
@@ -485,7 +500,7 @@ inline constexpr optional<T>::optional(const optional<U>& rhs)
 template <class T>
 template <class U>
 inline constexpr optional<T>::optional(optional<U>&& rhs)
-    requires detail::enable_from_other<T, U, U&&> && std::is_convertible_v<U&&, T>
+    requires(!std::is_reference_v<U> && detail::enable_from_other<T, U, U &&> && std::is_convertible_v<U &&, T>)
 {
     if (rhs.has_value()) {
         construct(std::move(*rhs));
@@ -495,10 +510,30 @@ inline constexpr optional<T>::optional(optional<U>&& rhs)
 template <class T>
 template <class U>
 inline constexpr optional<T>::optional(optional<U>&& rhs)
-    requires detail::enable_from_other<T, U, U&&> && (!std::is_convertible_v<U &&, T>)
+    requires(!std::is_reference_v<U> && detail::enable_from_other<T, U, U &&> && !std::is_convertible_v<U &&, T>)
 {
     if (rhs.has_value()) {
         construct(std::move(*rhs));
+    }
+}
+
+template <class T>
+template <class U>
+inline constexpr optional<T>::optional(const optional<U&>& rhs)
+    requires(detail::enable_from_other<T, U&, U&> && std::is_convertible_v<U&, T>)
+{
+    if (rhs.has_value()) {
+        construct(*rhs);
+    }
+}
+
+template <class T>
+template <class U>
+inline constexpr optional<T>::optional(const optional<U&>& rhs)
+    requires(detail::enable_from_other<T, U&, U&> && !std::is_convertible_v<U&, T>)
+{
+    if (rhs.has_value()) {
+        construct(*rhs);
     }
 }
 
@@ -515,6 +550,12 @@ inline constexpr optional<T>::~optional()
 // 22.5.3.4 Assignment[optional.assign]
 
 template <class T>
+inline constexpr optional<T>& optional<T>::operator=(nullopt_t) noexcept {
+    reset();
+    return *this;
+}
+
+template <class T>
 inline constexpr optional<T>& optional<T>::operator=(const optional<T>& rhs)
     requires std::is_copy_constructible_v<T> && std::is_copy_assignable_v<T> &&
              (!std::is_trivially_copy_assignable_v<T>)
@@ -524,7 +565,7 @@ inline constexpr optional<T>& optional<T>::operator=(const optional<T>& rhs)
     else if (has_value())
         value_ = rhs.value_;
     else
-        std::construct_at(std::addressof(value_), rhs.value_);
+        construct(rhs.value_);
     return *this;
 }
 
@@ -539,7 +580,7 @@ optional<T>::operator=(optional<T>&& rhs) noexcept(std::is_nothrow_move_construc
     else if (has_value())
         value_ = std::move(rhs.value_);
     else
-        std::construct_at(std::addressof(value_), std::move(rhs.value_));
+        construct(std::move(rhs.value_));
     return *this;
 }
 
@@ -566,7 +607,7 @@ inline constexpr optional<T>& optional<T>::operator=(U&& u)
 template <class T>
 template <class U>
 inline constexpr optional<T>& optional<T>::operator=(const optional<U>& rhs)
-    requires detail::enable_assign_from_other<T, U, const U&>
+    requires(!std::is_reference_v<U> && detail::enable_assign_from_other<T, U, const U&>)
 {
     if (has_value()) {
         if (rhs.has_value()) {
@@ -590,7 +631,7 @@ inline constexpr optional<T>& optional<T>::operator=(const optional<U>& rhs)
 template <class T>
 template <class U>
 inline constexpr optional<T>& optional<T>::operator=(optional<U>&& rhs)
-    requires detail::enable_assign_from_other<T, U, U>
+    requires(!std::is_reference_v<U> && detail::enable_assign_from_other<T, U, U>)
 {
     if (has_value()) {
         if (rhs.has_value()) {
@@ -602,6 +643,26 @@ inline constexpr optional<T>& optional<T>::operator=(optional<U>&& rhs)
 
     else if (rhs.has_value()) {
         construct(std::move(*rhs));
+    }
+
+    return *this;
+}
+
+template <class T>
+template <class U>
+inline constexpr optional<T>& optional<T>::operator=(const optional<U&>& rhs)
+    requires(detail::enable_assign_from_other<T, U&, U&>)
+{
+    if (has_value()) {
+        if (rhs.has_value()) {
+            value_ = *rhs;
+        } else {
+            hard_reset();
+        }
+    }
+
+    else if (rhs.has_value()) {
+        construct(*rhs);
     }
 
     return *this;
