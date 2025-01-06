@@ -65,6 +65,12 @@ class Point {
     bool operator==(const Point&) const  = default;
 };
 
+struct immovable {
+    explicit immovable()                   = default;
+    immovable(const immovable&)            = delete;
+    immovable& operator=(const immovable&) = delete;
+};
+
 struct copyable_from_non_const_lvalue_only {
     explicit copyable_from_non_const_lvalue_only()                                              = default;
     copyable_from_non_const_lvalue_only(copyable_from_non_const_lvalue_only&)                   = default;
