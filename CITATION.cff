@@ -1,4 +1,9 @@
-cff-version: 1.0.0
-message: "If you use this software, please cite it as below."
-title: "beman.optional26"
-url: "https://github.com/bemanproject/optional26"
+cff-version: 1.2.0
+title: beman.optional26
+message: 'If you use this software, please cite it as below.'
+type: software
+authors:
+  - name: The Beman Project
+repository-code: 'https://github.com/bemanproject/optional26'
+abstract: 'C++26 Extensions for std::optional'
+license: Apache-2.0
