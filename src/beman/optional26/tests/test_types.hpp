@@ -54,6 +54,16 @@ struct move_detector {
     bool been_moved = false;
 };
 
+struct copyable_move_detector {
+    constexpr copyable_move_detector()                            = default;
+    constexpr copyable_move_detector(const copyable_move_detector&) = default;
+    constexpr copyable_move_detector(copyable_move_detector&& rhs) { rhs.been_moved = true; }
+    constexpr copyable_move_detector& operator=(const copyable_move_detector&) = default;
+    constexpr copyable_move_detector& operator=(copyable_move_detector&& rhs) { rhs.been_moved = true; return *this;}
+
+    bool been_moved = false;
+};
+
 class Point {
     int x_;
     int y_;
@@ -69,6 +79,44 @@ struct immovable {
     explicit immovable()                   = default;
     immovable(const immovable&)            = delete;
     immovable& operator=(const immovable&) = delete;
+};
+
+struct copyable_from_non_const_lvalue_only {
+    explicit copyable_from_non_const_lvalue_only()                                              = default;
+    copyable_from_non_const_lvalue_only(copyable_from_non_const_lvalue_only&)                   = default;
+    copyable_from_non_const_lvalue_only(const copyable_from_non_const_lvalue_only&)             = delete;
+    copyable_from_non_const_lvalue_only(copyable_from_non_const_lvalue_only&&)                  = delete;
+    copyable_from_non_const_lvalue_only(const copyable_from_non_const_lvalue_only&&)            = delete;
+    copyable_from_non_const_lvalue_only& operator=(copyable_from_non_const_lvalue_only&)        = default;
+    copyable_from_non_const_lvalue_only& operator=(const copyable_from_non_const_lvalue_only&)  = delete;
+    copyable_from_non_const_lvalue_only& operator=(copyable_from_non_const_lvalue_only&&)       = delete;
+    copyable_from_non_const_lvalue_only& operator=(const copyable_from_non_const_lvalue_only&&) = delete;
+};
+
+struct explicitly_convertible_from_non_const_lvalue_only {
+    explicit operator copyable_from_non_const_lvalue_only() & { return copyable_from_non_const_lvalue_only{}; }
+    explicit operator copyable_from_non_const_lvalue_only() const&  = delete;
+    explicit operator copyable_from_non_const_lvalue_only() &&      = delete;
+    explicit operator copyable_from_non_const_lvalue_only() const&& = delete;
+};
+
+struct copyable_from_const_lvalue_only {
+    explicit copyable_from_const_lvalue_only()                                          = default;
+    copyable_from_const_lvalue_only(copyable_from_const_lvalue_only&)                   = delete;
+    copyable_from_const_lvalue_only(const copyable_from_const_lvalue_only&)             = default;
+    copyable_from_const_lvalue_only(copyable_from_const_lvalue_only&&)                  = delete;
+    copyable_from_const_lvalue_only(const copyable_from_const_lvalue_only&&)            = delete;
+    copyable_from_const_lvalue_only& operator=(copyable_from_const_lvalue_only&)        = delete;
+    copyable_from_const_lvalue_only& operator=(const copyable_from_const_lvalue_only&)  = default;
+    copyable_from_const_lvalue_only& operator=(copyable_from_const_lvalue_only&&)       = delete;
+    copyable_from_const_lvalue_only& operator=(const copyable_from_const_lvalue_only&&) = delete;
+};
+
+struct explicitly_convertible_from_const_lvalue_only {
+    explicit operator copyable_from_const_lvalue_only() & = delete;
+    explicit operator copyable_from_const_lvalue_only() const& { return copyable_from_const_lvalue_only{}; }
+    explicit operator copyable_from_const_lvalue_only() &&      = delete;
+    explicit operator copyable_from_const_lvalue_only() const&& = delete;
 };
 
 } // namespace beman::optional26::tests

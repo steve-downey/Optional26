@@ -914,3 +914,18 @@ TEST(OptionalTest, CanHoldValueOfImmovableType) {
     beman::optional26::optional<immovable> o2 = beman::optional26::nullopt;
     EXPECT_FALSE(o2);
 }
+
+TEST(OptionalTest, TestStealingFromReference) {
+    beman::optional26::tests::copyable_move_detector                               m;
+    beman::optional26::optional<beman::optional26::tests::copyable_move_detector&> om{m};
+    beman::optional26::optional<beman::optional26::tests::copyable_move_detector>  o{std::move(om)};
+    EXPECT_FALSE(m.been_moved);
+}
+
+TEST(OptionalTest, TestAssignStealingFromReference) {
+    beman::optional26::tests::copyable_move_detector                               m;
+    beman::optional26::optional<beman::optional26::tests::copyable_move_detector&> om{m};
+    beman::optional26::optional<beman::optional26::tests::copyable_move_detector>  o;
+    o = std::move(om);
+    EXPECT_FALSE(m.been_moved);
+}
