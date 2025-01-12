@@ -362,9 +362,9 @@ class optional {
     constexpr T&       value() &;
     constexpr const T& value() const&;
     constexpr T&&      value() &&;
-    template <class U>
+    template <class U = std::remove_cv_t<T>>
     constexpr T value_or(U&& u) const&;
-    template <class U>
+    template <class U = std::remove_cv_t<T>>
     constexpr T value_or(U&& u) &&;
 
     // \ref{optional.monadic}, monadic operations
