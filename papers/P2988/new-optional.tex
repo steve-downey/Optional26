@@ -564,7 +564,7 @@ constexpr optional<T>& operator=(const optional& rhs);
 \begin{itemdescr}
 \pnum
 \effects
-See \tref{optional.assign.copy}.
+See \tcode{optional.assign.copy}.
 \begin{lib2dtab2}{\tcode{optional::operator=(const optional\&)} effects}{optional.assign.copy}
 {\tcode{*this} contains a value}
 {\tcode{*this} does not contain a value}
@@ -615,7 +615,7 @@ constexpr optional& operator=(optional&& rhs) noexcept(@\seebelow@);
 
 \pnum
 \effects
-See \tref{optional.assign.move}.
+See \tcode{optional.assign.move}.
 The result of the expression \tcode{rhs.has_value()} remains unchanged.
 \begin{lib2dtab2}{\tcode{optional::operator=(optional\&\&)} effects}{optional.assign.move}
 {\tcode{*this} contains a value}
@@ -713,7 +713,7 @@ template<class U> constexpr optional<T>& operator=(const optional<U>& rhs);
 
 \pnum
 \effects
-See \tref{optional.assign.copy.templ}.
+See \tcode{optional.assign.copy.templ}.
 \begin{lib2dtab2}{\tcode{optional::operator=(const optional<U>\&)} effects}{optional.assign.copy.templ}
 {\tcode{*this} contains a value}
 {\tcode{*this} does not contain a value}
@@ -769,7 +769,7 @@ template<class U> constexpr optional<T>& operator=(const optional<U&>& rhs);
 
 \pnum
 \effects
-See \tref{optional.assign.refcopy.templ}.
+See \tcode{optional.assign.refcopy.templ}.
 \begin{lib2dtab2}{\tcode{optional::operator=(const optional<U\&>\&)} effects}{optional.assign.refcopy.templ}
 {\tcode{*this} contains a value}
 {\tcode{*this} does not contain a value}
@@ -828,7 +828,7 @@ template<class U> constexpr optional<T>& operator=(optional<U>&& rhs);
 
 \pnum
 \effects
-See \tref{optional.assign.move.templ}.
+See \tcode{optional.assign.move.templ}.
 The result of the expression \tcode{rhs.has_value()} remains unchanged.
 \begin{lib2dtab2}{\tcode{optional::operator=(optional<U>\&\&)} effects}{optional.assign.move.templ}
 {\tcode{*this} contains a value}
