@@ -257,7 +257,7 @@ TEST(RangeSupportTest, LoopOverEmptyRange) {
 
 TEST(RangeSupportTest, LoopOverNonEmptyRange) {
     auto lambda = [&] {
-        const auto                       expected_value = 0xCAFEBABE;
+        const auto                     expected_value = 0xCAFEBABE;
         beman::optional::optional<int> empty{expected_value};
         CONSTEXPR_ASSERT_TRUE(empty.has_value());
 
@@ -292,7 +292,7 @@ TEST(RangeSupportTest, LoopOptionalAssignment) {
         // Example from P3168R2: should mutate the value from an optional object.
         const int  initial_expected_value = 0xCAFEBABE;
         const int  expected_value         = 0xDEADBEEF;
-        const auto get_optional = [&]() -> beman::optional::optional<int> { return initial_expected_value; };
+        const auto get_optional           = [&]() -> beman::optional::optional<int> { return initial_expected_value; };
         CONSTEXPR_ASSERT_TRUE(get_optional().has_value());
         CONSTEXPR_ASSERT_TRUE(get_optional().value() == initial_expected_value);
 

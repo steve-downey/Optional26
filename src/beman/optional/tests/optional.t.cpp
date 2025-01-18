@@ -21,20 +21,20 @@ TEST(OptionalTest, Constructors) {
     std::ignore = i1;
     std::ignore = i2;
 
-    int                              i  = 0;
+    int                            i  = 0;
     beman::optional::optional<int> i3 = i;
-    std::ignore                         = i3;
+    std::ignore                       = i3;
 
     using beman::optional::tests::empty;
 
     beman::optional::optional<empty> e1;
     beman::optional::optional<int>   e2{beman::optional::nullopt};
 
-    empty                              e{};
+    empty                            e{};
     beman::optional::optional<empty> e3 = e;
-    std::ignore                           = e1;
-    std::ignore                           = e2;
-    std::ignore                           = e3;
+    std::ignore                         = e1;
+    std::ignore                         = e2;
+    std::ignore                         = e3;
 }
 
 TEST(OptionalTest, Constructors2) {
@@ -74,7 +74,7 @@ TEST(OptionalTest, Constructors2) {
     }
 
     {
-        auto                              i = 42;
+        auto                            i = 42;
         beman::optional::optional<int&> o = i;
         EXPECT_TRUE(o);
         EXPECT_TRUE(*o == 42);
@@ -100,8 +100,8 @@ TEST(OptionalTest, Constructors3) {
     using beman::optional::tests::base;
     using beman::optional::tests::derived;
 
-    base                              b{1};
-    derived                           d(1, 2);
+    base                            b{1};
+    derived                         d(1, 2);
     beman::optional::optional<base> b1{b};
     beman::optional::optional<base> b2{d};
 
@@ -113,7 +113,7 @@ TEST(OptionalTest, Constructors3) {
 TEST(OptionalTest, NonDefaultConstruct) {
     using beman::optional::tests::int_ctor;
 
-    int_ctor                              i = 7;
+    int_ctor                            i = 7;
     beman::optional::optional<int_ctor> v1{};
     beman::optional::optional<int_ctor> v2{i};
     std::ignore = v1;
@@ -122,7 +122,7 @@ TEST(OptionalTest, NonDefaultConstruct) {
 
 TEST(OptionalTest, OptionalOfOptional) {
     using O = beman::optional::optional<int>;
-    O                              o;
+    O                            o;
     beman::optional::optional<O> oo1 = o;
     EXPECT_TRUE(oo1.has_value());
     oo1 = o;
@@ -440,7 +440,7 @@ TEST(OptionalTest, Observers) {
     EXPECT_TRUE(success);
 
     beman::optional::optional<move_detector> o4{beman::optional::in_place};
-    move_detector                              o5 = std::move(o4).value();
+    move_detector                            o5 = std::move(o4).value();
     EXPECT_TRUE(o4->been_moved);
     EXPECT_TRUE(!o5.been_moved);
 }
@@ -724,16 +724,16 @@ TEST(OptionalTest, BreathingTest) {
 TEST(OptionalTest, BreathingTestRef) {
     beman::optional::optional<int&> m;
 
-    int                               one = 1;
+    int                             one = 1;
     beman::optional::optional<int&> m1{one};
 
     m = m1;
     ASSERT_EQ(*std::begin(m), 1);
 
-    double                               zero = 0.0;
+    double                             zero = 0.0;
     beman::optional::optional<double&> d0{zero};
 
-    double                               one_d = 1.0;
+    double                             one_d = 1.0;
     beman::optional::optional<double&> d1{one_d};
 
     d0 = d1;
@@ -762,9 +762,9 @@ TEST(OptionalTest, CompTest) {
 
 TEST(OptionalTest, CompTestRef) {
     beman::optional::optional<int&> m;
-    int                               zero  = 0;
-    int                               one   = 1;
-    int                               one_a = 1;
+    int                             zero  = 0;
+    int                             one   = 1;
+    int                             one_a = 1;
     beman::optional::optional<int&> m0{zero};
     beman::optional::optional<int&> m1{one};
     beman::optional::optional<int&> m1a{one_a};
@@ -815,7 +815,7 @@ TEST(OptionalTest, PythTripleTest) {
 using namespace beman;
 
 TEST(OptionalTest, ValueBase) {
-    int                              i = 7;
+    int                            i = 7;
     beman::optional::optional<int> v1{};
 
     beman::optional::optional<int> v2{i};
@@ -837,7 +837,7 @@ TEST(OptionalTest, RefWrapper) {
 
 TEST(OptionalTest, ValueNonDefaultConstruct) {
     using beman::optional::tests::int_ctor;
-    int_ctor                              i = 7;
+    int_ctor                            i = 7;
     beman::optional::optional<int_ctor> v1{};
     beman::optional::optional<int_ctor> v2{i};
     std::ignore = v1;
@@ -845,7 +845,7 @@ TEST(OptionalTest, ValueNonDefaultConstruct) {
 }
 
 TEST(OptionalTest, RefBase) {
-    int                               i = 7;
+    int                             i = 7;
     beman::optional::optional<int&> v1{};
     // ASSERT_TRUE(v1.size() == 0);
 

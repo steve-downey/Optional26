@@ -17,19 +17,19 @@ TEST(OptionalConstexprTest, Constructors) {
     std::ignore = i1;
     std::ignore = i2;
 
-    constexpr int                              i  = 0;
+    constexpr int                            i  = 0;
     constexpr beman::optional::optional<int> i3 = i;
-    std::ignore                                   = i3;
+    std::ignore                                 = i3;
 
     constexpr beman::optional::optional<beman::optional::tests::empty> e1;
-    constexpr beman::optional::optional<int>                             e2{beman::optional::nullopt};
+    constexpr beman::optional::optional<int>                           e2{beman::optional::nullopt};
 
-    constexpr beman::optional::tests::empty                              e{};
+    constexpr beman::optional::tests::empty                            e{};
     constexpr beman::optional::optional<beman::optional::tests::empty> e3 = e;
-    std::ignore                                                               = e1;
-    std::ignore                                                               = e2;
-    std::ignore                                                               = e;
-    std::ignore                                                               = e3;
+    std::ignore                                                           = e1;
+    std::ignore                                                           = e2;
+    std::ignore                                                           = e;
+    std::ignore                                                           = e3;
 }
 
 TEST(OptionalConstexprTest, Constructors2) {
@@ -69,7 +69,7 @@ TEST(OptionalConstexprTest, Constructors2) {
     }
 
     {
-        static constexpr auto                             i = 42;
+        static constexpr auto                           i = 42;
         constexpr beman::optional::optional<const int&> o = i;
         EXPECT_TRUE(o);
         EXPECT_TRUE(*o == 42);
@@ -88,8 +88,8 @@ TEST(OptionalConstexprTest, Constructors3) {
     using beman::optional::tests::base;
     using beman::optional::tests::derived;
 
-    constexpr base                              b{1};
-    constexpr derived                           d(1, 2);
+    constexpr base                            b{1};
+    constexpr derived                         d(1, 2);
     constexpr beman::optional::optional<base> b1{b};
     constexpr beman::optional::optional<base> b2{d};
 
@@ -114,7 +114,7 @@ class NoDefault {
 } // namespace
 
 TEST(OptionalConstexprTest, NonDefaultConstruct) {
-    constexpr NoDefault                              i = 7;
+    constexpr NoDefault                            i = 7;
     constexpr beman::optional::optional<NoDefault> v1{};
     constexpr beman::optional::optional<NoDefault> v2{i};
     std::ignore = v1;
@@ -122,7 +122,7 @@ TEST(OptionalConstexprTest, NonDefaultConstruct) {
 }
 
 consteval bool testConstexprAssignmentValue() {
-    bool                             retval = true;
+    bool                           retval = true;
     beman::optional::optional<int> o1     = 42;
     beman::optional::optional<int> o2     = 12;
     beman::optional::optional<int> o3;
@@ -194,7 +194,7 @@ struct takes_init_and_variadic {
 };
 
 consteval bool testConstexprInPlace() {
-    bool                                       retval = true;
+    bool                                     retval = true;
     constexpr beman::optional::optional<int> o1{beman::optional::in_place};
     constexpr beman::optional::optional<int> o2(beman::optional::in_place);
     retval &= (bool(o1));
