@@ -1,12 +1,12 @@
-// src/beman/optional26/tests/test_types.h -*-C++-*-
+// src/beman/optional/tests/test_types.h -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef BEMAN_OPTIONAL26_TESTS_TEST_TYPES_HPP
-#define BEMAN_OPTIONAL26_TESTS_TEST_TYPES_HPP
+#ifndef BEMAN_OPTIONAL_TESTS_TEST_TYPES_HPP
+#define BEMAN_OPTIONAL_TESTS_TEST_TYPES_HPP
 
 #include <compare>
 
-namespace beman::optional26::tests {
+namespace beman::optional::tests {
 // Classes used in the tests.
 
 // Empty class helper.
@@ -109,6 +109,6 @@ struct explicitly_convertible_from_const_lvalue_only {
     explicit operator copyable_from_const_lvalue_only() const&& = delete;
 };
 
-} // namespace beman::optional26::tests
+} // namespace beman::optional::tests
 
-#endif // BEMAN_OPTIONAL26_TESTS_TEST_TYPES_HPP
+#endif // BEMAN_OPTIONAL_TESTS_TEST_TYPES_HPP

@@ -111,7 +111,7 @@ jobs:
       - name: Install
         run: |
           set -x
-          cmake --install .build --config RelWithDebInfo --component beman_optional26_development --verbose
+          cmake --install .build --config RelWithDebInfo --component beman_optional_development --verbose
       - name: CMake Gcov Build
         if: matrix.config.coverage
         run: |
@@ -132,5 +132,5 @@ jobs:
         if: matrix.config.coverage
         uses: coverallsapp/github-action@main
         with:
-          file: ${{runner.workspace}}/optional26/.build/coverage.json
+          file: ${{runner.workspace}}/optional/.build/coverage.json
           github-token: ${{ secrets.GITHUB_TOKEN }}

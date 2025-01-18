@@ -1,7 +1,7 @@
 // examples/optional_ref.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/optional26/optional.hpp>
+#include <beman/optional/optional.hpp>
 
 #include <string>
 
@@ -33,12 +33,12 @@ namespace std26 {
 // After C++26 with P2988R5, the code would look like this.
 // Using directly optional to represent optional references.
 
-beman::optional26::optional<Cat&> find_cat(std::string) { return {}; }
+beman::optional::optional<Cat&> find_cat(std::string) { return {}; }
 
-beman::optional26::optional<Cat&> do_it(Cat& cat) { return {cat}; }
+beman::optional::optional<Cat&> do_it(Cat& cat) { return {cat}; }
 
-beman::optional26::optional<Cat&> api() {
-    beman::optional26::optional<Cat&> cat = find_cat("Fido");
+beman::optional::optional<Cat&> api() {
+    beman::optional::optional<Cat&> cat = find_cat("Fido");
     return cat.and_then(do_it);
 }
 
@@ -47,7 +47,7 @@ beman::optional26::optional<Cat&> api() {
 int main() {
     // Example from P2988R5: optional reference.
     [[maybe_unused]] Cat*                              old_cat = std17::api();
-    [[maybe_unused]] beman::optional26::optional<Cat&> new_cat = std26::api();
+    [[maybe_unused]] beman::optional::optional<Cat&> new_cat = std26::api();
 
     return 0;
 }

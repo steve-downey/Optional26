@@ -65,7 +65,7 @@ compile: $(_build_path)/CMakeCache.txt ## Compile the project
 	cmake --build $(_build_path)  --config $(CONFIG) --target all -- -k 0
 
 install: $(_build_path)/CMakeCache.txt compile ## Install the project
-	cmake --install $(_build_path) --config $(CONFIG) --component beman_optional26_development --verbose
+	cmake --install $(_build_path) --config $(CONFIG) --component beman_optional_development --verbose
 
 ctest: $(_build_path)/CMakeCache.txt ## Run CTest on current build
 	cd $(_build_path) && ctest --output-on-failure -C $(CONFIG)

@@ -1,63 +1,63 @@
-// src/beman/optional26/tests/optional_ref.t.cpp -*-C++-*-
+// src/beman/optional/tests/optional_ref.t.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/optional26/optional.hpp>
-#include <beman/optional26/tests/test_types.hpp>
+#include <beman/optional/optional.hpp>
+#include <beman/optional/tests/test_types.hpp>
 
 #include <gtest/gtest.h>
 
 TEST(OptionalRefTest, Constructors) {
-    beman::optional26::optional<int&> i1;
-    beman::optional26::optional<int&> i2{beman::optional26::nullopt};
+    beman::optional::optional<int&> i1;
+    beman::optional::optional<int&> i2{beman::optional::nullopt};
     std::ignore = i1;
     std::ignore = i2;
 
     int                               i  = 0;
-    beman::optional26::optional<int&> i3 = i;
+    beman::optional::optional<int&> i3 = i;
     std::ignore                          = i3;
 
-    using beman::optional26::tests::empty;
+    using beman::optional::tests::empty;
 
-    beman::optional26::optional<empty&> e1;
-    beman::optional26::optional<empty&> e2{beman::optional26::nullopt};
+    beman::optional::optional<empty&> e1;
+    beman::optional::optional<empty&> e2{beman::optional::nullopt};
     std::ignore = e1;
     std::ignore = e2;
 
     empty                               e{};
-    beman::optional26::optional<empty&> e3 = e;
+    beman::optional::optional<empty&> e3 = e;
     std::ignore                            = e3;
 
-    using beman::optional26::tests::no_default_ctor;
+    using beman::optional::tests::no_default_ctor;
 
-    beman::optional26::optional<no_default_ctor&> nd1;
-    beman::optional26::optional<no_default_ctor&> nd2{beman::optional26::nullopt};
+    beman::optional::optional<no_default_ctor&> nd1;
+    beman::optional::optional<no_default_ctor&> nd2{beman::optional::nullopt};
     std::ignore = nd1;
     std::ignore = nd2;
 
     no_default_ctor no_def{e};
 
-    beman::optional26::optional<no_default_ctor&> nd3 = no_def;
+    beman::optional::optional<no_default_ctor&> nd3 = no_def;
     std::ignore                                       = nd3;
 
-    beman::optional26::optional<int&> ie;
-    beman::optional26::optional<int&> i4 = ie;
+    beman::optional::optional<int&> ie;
+    beman::optional::optional<int&> i4 = ie;
     EXPECT_FALSE(i4);
 
-    using beman::optional26::tests::base;
-    using beman::optional26::tests::derived;
+    using beman::optional::tests::base;
+    using beman::optional::tests::derived;
 
     base                               b{1};
     derived                            d(1, 2);
-    beman::optional26::optional<base&> b1 = b;
-    beman::optional26::optional<base&> b2 = d;
+    beman::optional::optional<base&> b1 = b;
+    beman::optional::optional<base&> b2 = d;
 
-    beman::optional26::optional<derived&> d2 = d;
-    beman::optional26::optional<base&>    b3 = d2;
-    beman::optional26::optional<base&>    b4{d2};
+    beman::optional::optional<derived&> d2 = d;
+    beman::optional::optional<base&>    b3 = d2;
+    beman::optional::optional<base&>    b4{d2};
 
-    beman::optional26::optional<derived&> empty;
-    beman::optional26::optional<base&>    fromEmpty(empty);
-    beman::optional26::optional<base&>    fromEmpty2 = empty;
+    beman::optional::optional<derived&> empty;
+    beman::optional::optional<base&>    fromEmpty(empty);
+    beman::optional::optional<base&>    fromEmpty2 = empty;
 
     /*
      * template <class U>
@@ -68,18 +68,18 @@ TEST(OptionalRefTest, Constructors) {
      * *DIS*engaged
      */
 
-    beman::optional26::optional<int&> tempint = {};
+    beman::optional::optional<int&> tempint = {};
     EXPECT_FALSE(tempint);
 }
 
 struct Thing {};
-beman::optional26::optional<Thing&> process() {
+beman::optional::optional<Thing&> process() {
     static Thing t;
     return t;
 }
 
 TEST(OptionalRefTest, Assignment) {
-    beman::optional26::optional<int&> i1;
+    beman::optional::optional<int&> i1;
     EXPECT_FALSE(i1);
     int i = 5;
     i1    = i;
@@ -90,13 +90,13 @@ TEST(OptionalRefTest, Assignment) {
 
     double d;
     // i1 = d;  // ill-formed by mandate
-    beman::optional26::optional<double&> d1 = d;
+    beman::optional::optional<double&> d1 = d;
     // i1 = d1; // ill-formed by mandate
-    beman::optional26::optional<int&> i2 = i1;
+    beman::optional::optional<int&> i2 = i1;
     EXPECT_TRUE(i2);
     EXPECT_TRUE(*i2 = 7);
 
-    beman::optional26::optional<int&> empty;
+    beman::optional::optional<int&> empty;
     EXPECT_FALSE(empty);
     i2 = empty;
     EXPECT_FALSE(i2);
@@ -106,12 +106,12 @@ TEST(OptionalRefTest, Assignment) {
     EXPECT_EQ(empty, 8);
     EXPECT_EQ(&result, &eight);
 
-    beman::optional26::optional<const Thing&> o;
+    beman::optional::optional<const Thing&> o;
     EXPECT_FALSE(o);
     o = process(); // well-formed
     EXPECT_TRUE(o);
 
-    beman::optional26::optional<const int&> o2;
+    beman::optional::optional<const int&> o2;
     EXPECT_FALSE(o2);
     o2 = [&]() { return i1; }();
 
@@ -121,9 +121,9 @@ TEST(OptionalRefTest, Assignment) {
 TEST(OptionalRefTest, RelationalOps) {
     int                               i1 = 4;
     int                               i2 = 42;
-    beman::optional26::optional<int&> o1{i1};
-    beman::optional26::optional<int&> o2{i2};
-    beman::optional26::optional<int&> o3{};
+    beman::optional::optional<int&> o1{i1};
+    beman::optional::optional<int&> o2{i2};
+    beman::optional::optional<int&> o3{};
 
     //  SECTION("self simple")
     {
@@ -142,31 +142,31 @@ TEST(OptionalRefTest, RelationalOps) {
     }
     //  SECTION("nullopt simple")
     {
-        EXPECT_TRUE(!(o1 == beman::optional26::nullopt));
-        EXPECT_TRUE(!(beman::optional26::nullopt == o1));
-        EXPECT_TRUE(o1 != beman::optional26::nullopt);
-        EXPECT_TRUE(beman::optional26::nullopt != o1);
-        EXPECT_TRUE(!(o1 < beman::optional26::nullopt));
-        EXPECT_TRUE(beman::optional26::nullopt < o1);
-        EXPECT_TRUE(o1 > beman::optional26::nullopt);
-        EXPECT_TRUE(!(beman::optional26::nullopt > o1));
-        EXPECT_TRUE(!(o1 <= beman::optional26::nullopt));
-        EXPECT_TRUE(beman::optional26::nullopt <= o1);
-        EXPECT_TRUE(o1 >= beman::optional26::nullopt);
-        EXPECT_TRUE(!(beman::optional26::nullopt >= o1));
+        EXPECT_TRUE(!(o1 == beman::optional::nullopt));
+        EXPECT_TRUE(!(beman::optional::nullopt == o1));
+        EXPECT_TRUE(o1 != beman::optional::nullopt);
+        EXPECT_TRUE(beman::optional::nullopt != o1);
+        EXPECT_TRUE(!(o1 < beman::optional::nullopt));
+        EXPECT_TRUE(beman::optional::nullopt < o1);
+        EXPECT_TRUE(o1 > beman::optional::nullopt);
+        EXPECT_TRUE(!(beman::optional::nullopt > o1));
+        EXPECT_TRUE(!(o1 <= beman::optional::nullopt));
+        EXPECT_TRUE(beman::optional::nullopt <= o1);
+        EXPECT_TRUE(o1 >= beman::optional::nullopt);
+        EXPECT_TRUE(!(beman::optional::nullopt >= o1));
 
-        EXPECT_TRUE(o3 == beman::optional26::nullopt);
-        EXPECT_TRUE(beman::optional26::nullopt == o3);
-        EXPECT_TRUE(!(o3 != beman::optional26::nullopt));
-        EXPECT_TRUE(!(beman::optional26::nullopt != o3));
-        EXPECT_TRUE(!(o3 < beman::optional26::nullopt));
-        EXPECT_TRUE(!(beman::optional26::nullopt < o3));
-        EXPECT_TRUE(!(o3 > beman::optional26::nullopt));
-        EXPECT_TRUE(!(beman::optional26::nullopt > o3));
-        EXPECT_TRUE(o3 <= beman::optional26::nullopt);
-        EXPECT_TRUE(beman::optional26::nullopt <= o3);
-        EXPECT_TRUE(o3 >= beman::optional26::nullopt);
-        EXPECT_TRUE(beman::optional26::nullopt >= o3);
+        EXPECT_TRUE(o3 == beman::optional::nullopt);
+        EXPECT_TRUE(beman::optional::nullopt == o3);
+        EXPECT_TRUE(!(o3 != beman::optional::nullopt));
+        EXPECT_TRUE(!(beman::optional::nullopt != o3));
+        EXPECT_TRUE(!(o3 < beman::optional::nullopt));
+        EXPECT_TRUE(!(beman::optional::nullopt < o3));
+        EXPECT_TRUE(!(o3 > beman::optional::nullopt));
+        EXPECT_TRUE(!(beman::optional::nullopt > o3));
+        EXPECT_TRUE(o3 <= beman::optional::nullopt);
+        EXPECT_TRUE(beman::optional::nullopt <= o3);
+        EXPECT_TRUE(o3 >= beman::optional::nullopt);
+        EXPECT_TRUE(beman::optional::nullopt >= o3);
     }
     //  SECTION("with T simple")
     {
@@ -198,8 +198,8 @@ TEST(OptionalRefTest, RelationalOps) {
     }
     std::string                               s4 = "hello";
     std::string                               s5 = "xyz";
-    beman::optional26::optional<std::string&> o4{s4};
-    beman::optional26::optional<std::string&> o5{s5};
+    beman::optional::optional<std::string&> o4{s4};
+    beman::optional::optional<std::string&> o5{s5};
 
     //  SECTION("self complex")
     {
@@ -218,31 +218,31 @@ TEST(OptionalRefTest, RelationalOps) {
     }
     //  SECTION("nullopt complex")
     {
-        EXPECT_TRUE(!(o4 == beman::optional26::nullopt));
-        EXPECT_TRUE(!(beman::optional26::nullopt == o4));
-        EXPECT_TRUE(o4 != beman::optional26::nullopt);
-        EXPECT_TRUE(beman::optional26::nullopt != o4);
-        EXPECT_TRUE(!(o4 < beman::optional26::nullopt));
-        EXPECT_TRUE(beman::optional26::nullopt < o4);
-        EXPECT_TRUE(o4 > beman::optional26::nullopt);
-        EXPECT_TRUE(!(beman::optional26::nullopt > o4));
-        EXPECT_TRUE(!(o4 <= beman::optional26::nullopt));
-        EXPECT_TRUE(beman::optional26::nullopt <= o4);
-        EXPECT_TRUE(o4 >= beman::optional26::nullopt);
-        EXPECT_TRUE(!(beman::optional26::nullopt >= o4));
+        EXPECT_TRUE(!(o4 == beman::optional::nullopt));
+        EXPECT_TRUE(!(beman::optional::nullopt == o4));
+        EXPECT_TRUE(o4 != beman::optional::nullopt);
+        EXPECT_TRUE(beman::optional::nullopt != o4);
+        EXPECT_TRUE(!(o4 < beman::optional::nullopt));
+        EXPECT_TRUE(beman::optional::nullopt < o4);
+        EXPECT_TRUE(o4 > beman::optional::nullopt);
+        EXPECT_TRUE(!(beman::optional::nullopt > o4));
+        EXPECT_TRUE(!(o4 <= beman::optional::nullopt));
+        EXPECT_TRUE(beman::optional::nullopt <= o4);
+        EXPECT_TRUE(o4 >= beman::optional::nullopt);
+        EXPECT_TRUE(!(beman::optional::nullopt >= o4));
 
-        EXPECT_TRUE(o3 == beman::optional26::nullopt);
-        EXPECT_TRUE(beman::optional26::nullopt == o3);
-        EXPECT_TRUE(!(o3 != beman::optional26::nullopt));
-        EXPECT_TRUE(!(beman::optional26::nullopt != o3));
-        EXPECT_TRUE(!(o3 < beman::optional26::nullopt));
-        EXPECT_TRUE(!(beman::optional26::nullopt < o3));
-        EXPECT_TRUE(!(o3 > beman::optional26::nullopt));
-        EXPECT_TRUE(!(beman::optional26::nullopt > o3));
-        EXPECT_TRUE(o3 <= beman::optional26::nullopt);
-        EXPECT_TRUE(beman::optional26::nullopt <= o3);
-        EXPECT_TRUE(o3 >= beman::optional26::nullopt);
-        EXPECT_TRUE(beman::optional26::nullopt >= o3);
+        EXPECT_TRUE(o3 == beman::optional::nullopt);
+        EXPECT_TRUE(beman::optional::nullopt == o3);
+        EXPECT_TRUE(!(o3 != beman::optional::nullopt));
+        EXPECT_TRUE(!(beman::optional::nullopt != o3));
+        EXPECT_TRUE(!(o3 < beman::optional::nullopt));
+        EXPECT_TRUE(!(beman::optional::nullopt < o3));
+        EXPECT_TRUE(!(o3 > beman::optional::nullopt));
+        EXPECT_TRUE(!(beman::optional::nullopt > o3));
+        EXPECT_TRUE(o3 <= beman::optional::nullopt);
+        EXPECT_TRUE(beman::optional::nullopt <= o3);
+        EXPECT_TRUE(o3 >= beman::optional::nullopt);
+        EXPECT_TRUE(beman::optional::nullopt >= o3);
     }
 
     //  SECTION("with T complex")
@@ -276,11 +276,11 @@ TEST(OptionalRefTest, RelationalOps) {
 }
 
 TEST(OptionalRefTest, Triviality) {
-    EXPECT_TRUE(std::is_trivially_copy_constructible<beman::optional26::optional<int&>>::value);
-    EXPECT_TRUE(std::is_trivially_copy_assignable<beman::optional26::optional<int&>>::value);
-    EXPECT_TRUE(std::is_trivially_move_constructible<beman::optional26::optional<int&>>::value);
-    EXPECT_TRUE(std::is_trivially_move_assignable<beman::optional26::optional<int&>>::value);
-    EXPECT_TRUE(std::is_trivially_destructible<beman::optional26::optional<int&>>::value);
+    EXPECT_TRUE(std::is_trivially_copy_constructible<beman::optional::optional<int&>>::value);
+    EXPECT_TRUE(std::is_trivially_copy_assignable<beman::optional::optional<int&>>::value);
+    EXPECT_TRUE(std::is_trivially_move_constructible<beman::optional::optional<int&>>::value);
+    EXPECT_TRUE(std::is_trivially_move_assignable<beman::optional::optional<int&>>::value);
+    EXPECT_TRUE(std::is_trivially_destructible<beman::optional::optional<int&>>::value);
 
     {
         struct T {
@@ -290,11 +290,11 @@ TEST(OptionalRefTest, Triviality) {
             T& operator=(T&&)      = default;
             ~T()                   = default;
         };
-        EXPECT_TRUE(std::is_trivially_copy_constructible<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_trivially_copy_assignable<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_trivially_move_constructible<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_trivially_move_assignable<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_trivially_destructible<beman::optional26::optional<T&>>::value);
+        EXPECT_TRUE(std::is_trivially_copy_constructible<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_trivially_copy_assignable<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_trivially_move_constructible<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_trivially_move_assignable<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_trivially_destructible<beman::optional::optional<T&>>::value);
     }
 
     {
@@ -305,23 +305,23 @@ TEST(OptionalRefTest, Triviality) {
             T& operator=(T&&) { return *this; };
             ~T() {}
         };
-        EXPECT_TRUE(std::is_trivially_copy_constructible<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_trivially_copy_assignable<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_trivially_move_constructible<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_trivially_move_assignable<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_trivially_destructible<beman::optional26::optional<T&>>::value);
+        EXPECT_TRUE(std::is_trivially_copy_constructible<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_trivially_copy_assignable<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_trivially_move_constructible<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_trivially_move_assignable<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_trivially_destructible<beman::optional::optional<T&>>::value);
 
-        EXPECT_TRUE((std::is_trivially_constructible<beman::optional26::optional<T&>,
-                                                     beman::optional26::optional<T&>&>::value));
+        EXPECT_TRUE((std::is_trivially_constructible<beman::optional::optional<T&>,
+                                                     beman::optional::optional<T&>&>::value));
     }
 }
 
 TEST(OptionalRefTest, Deletion) {
-    EXPECT_TRUE(std::is_copy_constructible<beman::optional26::optional<int&>>::value);
-    EXPECT_TRUE(std::is_copy_assignable<beman::optional26::optional<int&>>::value);
-    EXPECT_TRUE(std::is_move_constructible<beman::optional26::optional<int&>>::value);
-    EXPECT_TRUE(std::is_move_assignable<beman::optional26::optional<int&>>::value);
-    EXPECT_TRUE(std::is_destructible<beman::optional26::optional<int&>>::value);
+    EXPECT_TRUE(std::is_copy_constructible<beman::optional::optional<int&>>::value);
+    EXPECT_TRUE(std::is_copy_assignable<beman::optional::optional<int&>>::value);
+    EXPECT_TRUE(std::is_move_constructible<beman::optional::optional<int&>>::value);
+    EXPECT_TRUE(std::is_move_assignable<beman::optional::optional<int&>>::value);
+    EXPECT_TRUE(std::is_destructible<beman::optional::optional<int&>>::value);
 
     {
         struct T {
@@ -331,11 +331,11 @@ TEST(OptionalRefTest, Deletion) {
             T& operator=(T&&)      = default;
             ~T()                   = default;
         };
-        EXPECT_TRUE(std::is_copy_constructible<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_copy_assignable<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_move_constructible<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_move_assignable<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_destructible<beman::optional26::optional<T&>>::value);
+        EXPECT_TRUE(std::is_copy_constructible<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_copy_assignable<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_move_constructible<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_move_assignable<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_destructible<beman::optional::optional<T&>>::value);
     }
 
     {
@@ -345,10 +345,10 @@ TEST(OptionalRefTest, Deletion) {
             T& operator=(const T&) = delete;
             T& operator=(T&&)      = delete;
         };
-        EXPECT_TRUE(std::is_copy_constructible<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_copy_assignable<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_move_constructible<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_move_assignable<beman::optional26::optional<T&>>::value);
+        EXPECT_TRUE(std::is_copy_constructible<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_copy_assignable<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_move_constructible<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_move_assignable<beman::optional::optional<T&>>::value);
     }
 
     {
@@ -358,10 +358,10 @@ TEST(OptionalRefTest, Deletion) {
             T& operator=(const T&) = delete;
             T& operator=(T&&)      = default;
         };
-        EXPECT_TRUE(std::is_copy_constructible<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_copy_assignable<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_move_constructible<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_move_assignable<beman::optional26::optional<T&>>::value);
+        EXPECT_TRUE(std::is_copy_constructible<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_copy_assignable<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_move_constructible<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_move_assignable<beman::optional::optional<T&>>::value);
     }
 
     {
@@ -371,8 +371,8 @@ TEST(OptionalRefTest, Deletion) {
             T& operator=(const T&) = default;
             T& operator=(T&&)      = delete;
         };
-        EXPECT_TRUE(std::is_copy_constructible<beman::optional26::optional<T&>>::value);
-        EXPECT_TRUE(std::is_copy_assignable<beman::optional26::optional<T&>>::value);
+        EXPECT_TRUE(std::is_copy_constructible<beman::optional::optional<T&>>::value);
+        EXPECT_TRUE(std::is_copy_assignable<beman::optional::optional<T&>>::value);
     }
 }
 
@@ -384,25 +384,25 @@ struct takes_init_and_variadic {
 };
 
 TEST(OptionalRefTest, Nullopt) {
-    beman::optional26::optional<int&> o1 = beman::optional26::nullopt;
-    beman::optional26::optional<int&> o2{beman::optional26::nullopt};
-    beman::optional26::optional<int&> o3(beman::optional26::nullopt);
-    beman::optional26::optional<int&> o4 = {beman::optional26::nullopt};
+    beman::optional::optional<int&> o1 = beman::optional::nullopt;
+    beman::optional::optional<int&> o2{beman::optional::nullopt};
+    beman::optional::optional<int&> o3(beman::optional::nullopt);
+    beman::optional::optional<int&> o4 = {beman::optional::nullopt};
 
     EXPECT_TRUE(!o1);
     EXPECT_TRUE(!o2);
     EXPECT_TRUE(!o3);
     EXPECT_TRUE(!o4);
 
-    EXPECT_TRUE(!std::is_default_constructible<beman::optional26::nullopt_t>::value);
+    EXPECT_TRUE(!std::is_default_constructible<beman::optional::nullopt_t>::value);
 }
 
 TEST(OptionalRefTest, Observers) {
     int                                     var = 42;
-    beman::optional26::optional<int&>       o1  = var;
-    beman::optional26::optional<int&>       o2;
-    const beman::optional26::optional<int&> o3 = var;
-    const beman::optional26::optional<int&> o4;
+    beman::optional::optional<int&>       o1  = var;
+    beman::optional::optional<int&>       o2;
+    const beman::optional::optional<int&> o3 = var;
+    const beman::optional::optional<int&> o4;
     int                                     var2 = 42;
     int                                     var3 = 6 * 9;
     EXPECT_TRUE(*o1 == 42);
@@ -418,13 +418,13 @@ TEST(OptionalRefTest, Observers) {
     int var99 = 99;
     j         = 88;
     EXPECT_TRUE([&]() {
-        beman::optional26::optional<int&> o(j);
+        beman::optional::optional<int&> o(j);
         return o;
     }()
                     .value_or(var99) == 88);
 
     EXPECT_TRUE([&]() {
-        beman::optional26::optional<int&> o;
+        beman::optional::optional<int&> o;
         return o;
     }()
                     .value_or(var99) == 99);
@@ -434,8 +434,8 @@ TEST(OptionalRefTest, Observers) {
 
     std::string                               meow{"meow"};
     std::string                               bark{"bark"};
-    beman::optional26::optional<std::string&> so1;
-    beman::optional26::optional<std::string&> so2{meow};
+    beman::optional::optional<std::string&> so1;
+    beman::optional::optional<std::string&> so2{meow};
     auto                                      t1 = so1.value_or(bark);
     auto                                      t2 = so2.value_or(bark);
     // auto t3 = so1.value_or("bark");
@@ -485,9 +485,9 @@ TEST(OptionalRefTest, Observers) {
         int i_;
     };
     int_box                                     i1{3};
-    beman::optional26::optional<int_box&>       ob1 = i1;
-    beman::optional26::optional<int_box&>       ob2;
-    const beman::optional26::optional<int_box&> ob3 = i1;
+    beman::optional::optional<int_box&>       ob1 = i1;
+    beman::optional::optional<int_box&>       ob2;
+    const beman::optional::optional<int_box&> ob3 = i1;
     success                                         = std::is_same<decltype(ob1->i_), int>::value;
     static_assert(std::is_same<decltype(ob1->i_), int>::value);
     EXPECT_TRUE(success);
@@ -504,18 +504,18 @@ TEST(OptionalRefTest, Observers) {
 
 TEST(OptionalRefTest, MoveCheck) {
     int  x = 0;
-    int& y = std::move(beman::optional26::optional<int&>(x)).value();
+    int& y = std::move(beman::optional::optional<int&>(x)).value();
     EXPECT_EQ(&y, &x);
 
-    int& z = *std::move(beman::optional26::optional<int&>(x));
+    int& z = *std::move(beman::optional::optional<int&>(x));
     EXPECT_EQ(&z, &x);
 }
 
 TEST(OptionalRefTest, SwapValue) {
     int                               var    = 42;
     int                               twelve = 12;
-    beman::optional26::optional<int&> o1     = var;
-    beman::optional26::optional<int&> o2     = twelve;
+    beman::optional::optional<int&> o1     = var;
+    beman::optional::optional<int&> o2     = twelve;
     o1.swap(o2);
     EXPECT_EQ(o1.value(), 12);
     EXPECT_EQ(o2.value(), 42);
@@ -524,8 +524,8 @@ TEST(OptionalRefTest, SwapValue) {
 TEST(OptionalRefTest, SwapWNull) {
     int var = 42;
 
-    beman::optional26::optional<int&> o1 = var;
-    beman::optional26::optional<int&> o2 = beman::optional26::nullopt;
+    beman::optional::optional<int&> o1 = var;
+    beman::optional::optional<int&> o2 = beman::optional::nullopt;
     o1.swap(o2);
     EXPECT_TRUE(!o1.has_value());
     EXPECT_EQ(o2.value(), 42);
@@ -533,8 +533,8 @@ TEST(OptionalRefTest, SwapWNull) {
 
 TEST(OptionalRefTest, SwapNullIntializedWithValue) {
     int                               var = 42;
-    beman::optional26::optional<int&> o1  = beman::optional26::nullopt;
-    beman::optional26::optional<int&> o2  = var;
+    beman::optional::optional<int&> o1  = beman::optional::nullopt;
+    beman::optional::optional<int&> o2  = var;
     o1.swap(o2);
     EXPECT_EQ(o1.value(), 42);
     EXPECT_TRUE(!o2.has_value());
@@ -542,23 +542,23 @@ TEST(OptionalRefTest, SwapNullIntializedWithValue) {
 
 TEST(OptionalRefTest, AssignFromOptional) {
     int                               var = 42;
-    beman::optional26::optional<int&> o1  = beman::optional26::nullopt;
-    beman::optional26::optional<int&> o2  = var;
+    beman::optional::optional<int&> o1  = beman::optional::nullopt;
+    beman::optional::optional<int&> o2  = var;
 
     o2 = o1;
 
-    using beman::optional26::tests::base;
-    using beman::optional26::tests::derived;
+    using beman::optional::tests::base;
+    using beman::optional::tests::derived;
 
     base                               b{1};
     derived                            d(1, 2);
-    beman::optional26::optional<base&> empty_base;
-    beman::optional26::optional<base&> engaged_base{b};
+    beman::optional::optional<base&> empty_base;
+    beman::optional::optional<base&> engaged_base{b};
 
-    beman::optional26::optional<derived&> empty_derived_ref;
-    beman::optional26::optional<derived&> engaged_derived_ref{d};
+    beman::optional::optional<derived&> empty_derived_ref;
+    beman::optional::optional<derived&> engaged_derived_ref{d};
 
-    beman::optional26::optional<base&> optional_base_ref;
+    beman::optional::optional<base&> optional_base_ref;
     optional_base_ref = empty_base;
     EXPECT_FALSE(optional_base_ref.has_value());
     optional_base_ref = engaged_base;
@@ -570,12 +570,12 @@ TEST(OptionalRefTest, AssignFromOptional) {
     optional_base_ref = engaged_derived_ref;
     EXPECT_TRUE(optional_base_ref.has_value());
 
-    beman::optional26::optional<derived> empty_derived;
-    beman::optional26::optional<derived> engaged_derived{d};
+    beman::optional::optional<derived> empty_derived;
+    beman::optional::optional<derived> engaged_derived{d};
 
     static_assert(std::is_constructible_v<const base&, derived>);
 
-    beman::optional26::optional<const base&> optional_base_const_ref;
+    beman::optional::optional<const base&> optional_base_const_ref;
     optional_base_const_ref = empty_derived;
     EXPECT_FALSE(optional_base_const_ref.has_value());
 
@@ -604,47 +604,47 @@ TEST(OptionalRefTest, AssignFromOptional) {
     //     template <class U>
     //        constexpr optional& operator=(optional<U>&& rhs) = delete;
     // -- force failures for
-    // optional_base_const_ref = beman::optional26::optional<derived>(derived(3, 4));
+    // optional_base_const_ref = beman::optional::optional<derived>(derived(3, 4));
     // and
-    // optional_base_const_ref = [](){return beman::optional26::optional<derived>(derived(3, 4));}();
+    // optional_base_const_ref = [](){return beman::optional::optional<derived>(derived(3, 4));}();
     // TODO: Add to "fail-to-compile" tests when they exist
 }
 
 TEST(OptionalRefTest, ConstructFromOptional) {
     int                               var = 42;
-    beman::optional26::optional<int&> o1  = beman::optional26::nullopt;
-    beman::optional26::optional<int&> o2{var};
+    beman::optional::optional<int&> o1  = beman::optional::nullopt;
+    beman::optional::optional<int&> o2{var};
     EXPECT_FALSE(o1.has_value());
     EXPECT_TRUE(o2.has_value());
 
-    using beman::optional26::tests::base;
-    using beman::optional26::tests::derived;
+    using beman::optional::tests::base;
+    using beman::optional::tests::derived;
 
     base                               b{1};
     derived                            d(1, 2);
-    beman::optional26::optional<base&> disengaged_base;
-    beman::optional26::optional<base&> engaged_base{b};
+    beman::optional::optional<base&> disengaged_base;
+    beman::optional::optional<base&> engaged_base{b};
     EXPECT_FALSE(disengaged_base.has_value());
     EXPECT_TRUE(engaged_base.has_value());
 
-    beman::optional26::optional<derived&> disengaged_derived_ref;
-    beman::optional26::optional<derived&> engaged_derived_ref{d};
+    beman::optional::optional<derived&> disengaged_derived_ref;
+    beman::optional::optional<derived&> engaged_derived_ref{d};
 
-    beman::optional26::optional<base&> optional_base_ref{disengaged_derived_ref};
+    beman::optional::optional<base&> optional_base_ref{disengaged_derived_ref};
     EXPECT_FALSE(optional_base_ref.has_value());
 
-    beman::optional26::optional<base&> optional_base_ref2{engaged_derived_ref};
+    beman::optional::optional<base&> optional_base_ref2{engaged_derived_ref};
     EXPECT_TRUE(optional_base_ref2.has_value());
 
-    beman::optional26::optional<derived> disengaged_derived;
-    beman::optional26::optional<derived> engaged_derived{d};
+    beman::optional::optional<derived> disengaged_derived;
+    beman::optional::optional<derived> engaged_derived{d};
 
     static_assert(std::is_constructible_v<const base&, derived>);
 
-    beman::optional26::optional<const base&> optional_base_const_ref{disengaged_derived};
+    beman::optional::optional<const base&> optional_base_const_ref{disengaged_derived};
     EXPECT_FALSE(optional_base_const_ref.has_value());
 
-    beman::optional26::optional<const base&> optional_base_const_ref2{engaged_derived};
+    beman::optional::optional<const base&> optional_base_const_ref2{engaged_derived};
     EXPECT_TRUE(optional_base_const_ref2.has_value());
 }
 
@@ -653,33 +653,33 @@ TEST(OptionalRefTest, InPlace) {
     int two      = 2;
     int fortytwo = 42;
 
-    beman::optional26::optional<int&> o1{beman::optional26::in_place, one};
-    beman::optional26::optional<int&> o2(beman::optional26::in_place, two);
+    beman::optional::optional<int&> o1{beman::optional::in_place, one};
+    beman::optional::optional<int&> o2(beman::optional::in_place, two);
     EXPECT_TRUE(o1);
     EXPECT_TRUE(o1 == 1);
     EXPECT_TRUE(o2);
     EXPECT_TRUE(o2 == 2);
 
-    beman::optional26::optional<const int&> o3(beman::optional26::in_place, fortytwo);
+    beman::optional::optional<const int&> o3(beman::optional::in_place, fortytwo);
     EXPECT_TRUE(o3 == 42);
 
-    // beman::optional26::optional<std::vector<int>&> o5(beman::optional26::in_place, {0, 1});
+    // beman::optional::optional<std::vector<int>&> o5(beman::optional::in_place, {0, 1});
     // EXPECT_TRUE(o5);
     // EXPECT_TRUE((*o5)[0] == 0);
     // EXPECT_TRUE((*o5)[1] == 1);
 
-    // beman::optional26::optional<std::tuple<int, int> const&> o4(beman::optional26::in_place, zero, one);
+    // beman::optional::optional<std::tuple<int, int> const&> o4(beman::optional::in_place, zero, one);
     // EXPECT_TRUE(o4);
     // EXPECT_TRUE(std::get<0>(*o4) == 0);
     // EXPECT_TRUE(std::get<1>(*o4) == 1);
 }
 
 TEST(OptionalRefTest, OptionalOfOptional) {
-    using O = beman::optional26::optional<int>;
+    using O = beman::optional::optional<int>;
     O                               o;
-    beman::optional26::optional<O&> oo1a(o);
-    beman::optional26::optional<O&> oo1{o};
-    beman::optional26::optional<O&> oo1b = o;
+    beman::optional::optional<O&> oo1a(o);
+    beman::optional::optional<O&> oo1{o};
+    beman::optional::optional<O&> oo1b = o;
     EXPECT_TRUE(oo1.has_value());
     oo1 = o;
     EXPECT_TRUE(oo1.has_value());
@@ -688,7 +688,7 @@ TEST(OptionalRefTest, OptionalOfOptional) {
     EXPECT_TRUE(oo1.has_value());
     EXPECT_TRUE(&oo1.value() == &o);
 
-    beman::optional26::optional<const O&> oo2 = o;
+    beman::optional::optional<const O&> oo2 = o;
     EXPECT_TRUE(oo2.has_value());
     oo2 = o;
     EXPECT_TRUE(oo2.has_value());
@@ -699,29 +699,29 @@ TEST(OptionalRefTest, OptionalOfOptional) {
 }
 
 TEST(OptionalRefTest, ConstructFromReferenceWrapper) {
-    using O = beman::optional26::optional<int>;
+    using O = beman::optional::optional<int>;
     O o;
 
-    beman::optional26::optional<O&> oo1 = std::ref(o);
+    beman::optional::optional<O&> oo1 = std::ref(o);
     EXPECT_TRUE(oo1.has_value());
     oo1 = std::ref(o);
     EXPECT_TRUE(oo1.has_value());
     EXPECT_TRUE(&oo1.value() == &o);
 
     auto                            lvalue_refwrapper = std::ref(o);
-    beman::optional26::optional<O&> oo2               = lvalue_refwrapper;
+    beman::optional::optional<O&> oo2               = lvalue_refwrapper;
     EXPECT_TRUE(oo2.has_value());
     oo2 = lvalue_refwrapper;
     EXPECT_TRUE(oo2.has_value());
     EXPECT_TRUE(&oo2.value() == &o);
 
-    beman::optional26::optional<const O&> oo3 = std::ref(o);
+    beman::optional::optional<const O&> oo3 = std::ref(o);
     EXPECT_TRUE(oo3.has_value());
     oo3 = std::ref(o);
     EXPECT_TRUE(oo3.has_value());
     EXPECT_TRUE(&oo3.value() == &o);
 
-    beman::optional26::optional<const O&> oo4 = lvalue_refwrapper;
+    beman::optional::optional<const O&> oo4 = lvalue_refwrapper;
     EXPECT_TRUE(oo4.has_value());
     oo4 = lvalue_refwrapper;
     EXPECT_TRUE(oo4.has_value());
@@ -729,52 +729,52 @@ TEST(OptionalRefTest, ConstructFromReferenceWrapper) {
 }
 
 TEST(OptionalRefTest, OverloadResolutionChecksDangling) {
-    extern int  check_dangling(beman::optional26::optional<const std::string&>);
-    extern void check_dangling(beman::optional26::optional<const char*>);
+    extern int  check_dangling(beman::optional::optional<const std::string&>);
+    extern void check_dangling(beman::optional::optional<const char*>);
     std::string lvalue_string = "abc";
     static_assert(std::is_same_v<decltype(check_dangling(lvalue_string)), int>);
     //    static_assert(std::is_same_v<decltype(check_dangling("abc")), void>);
 }
 
-// beman::optional26::optional<int const&> foo() {
-//     beman::optional26::optional<int> o(10);
+// beman::optional::optional<int const&> foo() {
+//     beman::optional::optional<int> o(10);
 //     return o; // Thanks to a simpler implicit move.
 //     /* error: use of deleted function ‘constexpr
-//     beman::optional26::optional<T&>::optional(beman::optional26::optional<U>&&) [with U = int; T = const int]’
+//     beman::optional::optional<T&>::optional(beman::optional::optional<U>&&) [with U = int; T = const int]’
 //      */
 // }
 
 // TEST(OptionalRefTest, iff) {
-//     beman::optional26::optional<int const&> o =
-//         beman::optional26::optional<int>(o);
+//     beman::optional::optional<int const&> o =
+//         beman::optional::optional<int>(o);
 //     // error: use of deleted function ‘constexpr
-//     // beman::optional26::optional<T&>::optional(beman::optional26::optional<U>&&)
+//     // beman::optional::optional<T&>::optional(beman::optional::optional<U>&&)
 //     // [with U = int; T = const int]’
 // }
 
 // TEST(OptionalRefTest, dangle) {
 //     extern int check_dangling(
-//         beman::optional26::optional<std::string const&>); // #1
+//         beman::optional::optional<std::string const&>); // #1
 //     extern void check_dangling(
-//         beman::optional26::optional<char const*&>); // #2
-//     beman::optional26::optional<std::string> optional_string  = "abc";
-//     beman::optional26::optional<char const*> optional_pointer = "abc";
+//         beman::optional::optional<char const*&>); // #2
+//     beman::optional::optional<std::string> optional_string  = "abc";
+//     beman::optional::optional<char const*> optional_pointer = "abc";
 //     static_assert(std::is_same_v<decltype(check_dangling(optional_string)),
 //                                  int>); // unambiguously calls #1
 //     static_assert(std::is_same_v<decltype(check_dangling(
-//                                      beman::optional26::optional<char
+//                                      beman::optional::optional<char
 //                                      const*&>(
 //                                          optional_pointer))),
 //                                  void>); // unambiguously calls #2
 //     static_assert(std::is_same_v<decltype(check_dangling(optional_pointer)),
 //                   void>); // ambiguous
 //     // error: call of overloaded
-//     // ‘check_dangling(beman::optional26::optional<const char*>&)’ is
+//     // ‘check_dangling(beman::optional::optional<const char*>&)’ is
 //     ambiguous
 // }
 // namespace {
-// void process(beman::optional26::optional<std::string const&>) {}
-// void process(beman::optional26::optional<char const* const&>) {}
+// void process(beman::optional::optional<std::string const&>) {}
+// void process(beman::optional::optional<char const* const&>) {}
 // }
 // TEST(OptionalRefTest, more_dangle){
 
