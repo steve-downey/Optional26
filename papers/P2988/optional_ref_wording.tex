@@ -18,7 +18,7 @@
 
 \begin{flushright}
   \begin{tabular}{ll}
-    Document \#: & P2988R8 \\
+    Document \#: & P2988R9 \\
     Date: & \today \\
     Project: & Programming Language C++ \\
     Audience: & LEWG
@@ -36,6 +36,10 @@
 \chapter*{Changes Since Last Version}
 
 \begin{itemize}
+\item \textbf{Changes since R8}
+  \begin{itemize}
+  \item Fix move/assign optional<U\&> allowing stealing of referenced U
+  \end{itemize}
 \item \textbf{Changes since R7}
   \begin{itemize}
   \item Wording mandates/constraint fixes
@@ -384,6 +388,9 @@ constructing temporary \tcode{optional<T\&>}, and then assigning it to it.
 
 This observation allows us to provide only copy-assignment for \tcode{optional<T\&>}, instead of a set of converting assignments, that would need to replicate the signatures of constructors and their constraints. Assignment from any other value is handled by first implicitly constructing \tcode{optional<T\&>} and then using copy-assignment. Move-assignment is the same as copy-assignment, since only pointer copy is involved.
 
+\section{Copy and Assignment of optional<U\&>\&\& to optional<T>}
+Care must be take to prevent the assignment of a movable optional to disallow the copy or assignment of the underlying referred to value to be stolen. The \tcode{optional<T>::optional<U\&> const\&} assignment or copy constructor should be used instead, which also needs to check slightly different constraints for \tcode{converts-from-any-cvref} and for testing \tcode{is_assignable}. We thank Jan Kokemüller for uncovering this bug. The bug seemns to be present in many optional implementations that support references.
+
 
 \chapter{Proposal}
 
@@ -405,6 +412,10 @@ The wording here cross references and adopts the wording in \cite{P3091R2}.
 A pure library extension, affecting no other parts of the library or language.
 
 The proposed changes are relative to the current working draft \cite{N4910}.
+
+\chapter{Acknowledgements}
+Many thanks to all of the reviewers and authors of beman/optional26, \cite{The_Beman_Project_beman_optional26}, in particular A. Jiang, Darius Neațu, David Sankel, Eddie Nolan, Jan Kokemüller, Jeff Garland, and River. Tomasz Kamiński provided extensive support for the library wording of optional<T\&>.
+
 
 \chapter*{Document history}
 
