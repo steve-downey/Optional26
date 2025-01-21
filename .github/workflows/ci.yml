@@ -132,5 +132,5 @@ jobs:
         if: matrix.config.coverage
         uses: coverallsapp/github-action@main
         with:
-          file: ${{runner.workspace}}/optional26/.build/coverage.json
+          file: ${{runner.workspace}}/optional/.build/coverage.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
