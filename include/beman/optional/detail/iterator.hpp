@@ -1,15 +1,15 @@
-// include/beman/optional26/detail/iterator.hpp -*-C++-*-
+// include/beman/optional/detail/iterator.hpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef BEMAN_OPTIONAL26_DETAIL_ITERATOR_HPP
-#define BEMAN_OPTIONAL26_DETAIL_ITERATOR_HPP
+#ifndef BEMAN_OPTIONAL_DETAIL_ITERATOR_HPP
+#define BEMAN_OPTIONAL_DETAIL_ITERATOR_HPP
 
-#include <beman/optional26/detail/stl_interfaces/iterator_interface.hpp>
+#include <beman/optional/detail/stl_interfaces/iterator_interface.hpp>
 
 #include <concepts>
 #include <iterator>
 
-namespace beman::optional26::detail {
+namespace beman::optional::detail {
 
 // Forward declaration.
 template <class T, class Container>
@@ -19,7 +19,7 @@ struct contiguous_iterator;
 // Current implementation based on P2727R4: std::iterator_interface.
 template <class T, class Container>
 using base_contiguous_iterator = stl_interfaces::iterator_interface<
-#if !BEMAN_OPTIONAL26_DETAIL_STL_INTERFACES_USE_DEDUCED_THIS
+#if !BEMAN_OPTIONAL_DETAIL_STL_INTERFACES_USE_DEDUCED_THIS
     contiguous_iterator<T, Container>, // Required for P2727R4 to work with C++20/C++23. TODO: Do more experiments.
 #endif
     std::contiguous_iterator_tag,
@@ -62,6 +62,6 @@ struct contiguous_iterator : public base_contiguous_iterator<T, Container> {
     T* m_current;
 };
 
-} // namespace beman::optional26::detail
+} // namespace beman::optional::detail
 
-#endif // BEMAN_OPTIONAL26_DETAIL_ITERATOR_HPP
+#endif // BEMAN_OPTIONAL_DETAIL_ITERATOR_HPP

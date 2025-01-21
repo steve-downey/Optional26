@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.27)
 
-project(beman_optional26 VERSION 0.0.0 LANGUAGES CXX)
+project(beman_optional VERSION 0.0.0 LANGUAGES CXX)
 
 # Includes
 include(CTest)
@@ -13,13 +13,13 @@ include(FetchContent)
 set(TARGETS_EXPORT_NAME ${CMAKE_PROJECT_NAME}Targets)
 
 option(
-    OPTIONAL26_ENABLE_TESTING
+    OPTIONAL_ENABLE_TESTING
     "Enable building tests and test infrastructure"
     ${PROJECT_IS_TOP_LEVEL}
 )
 
-# Build the tests if enabled via the option OPTIONAL26_ENABLE_TESTING
-if(OPTIONAL26_ENABLE_TESTING)
+# Build the tests if enabled via the option OPTIONAL_ENABLE_TESTING
+if(OPTIONAL_ENABLE_TESTING)
     # Fetch GoogleTest
     FetchContent_Declare(
         googletest
@@ -33,29 +33,26 @@ endif()
 
 set(CMAKE_VERIFY_INTERFACE_HEADER_SETS ON)
 
-# Create the library target and named header set for beman_optional26
-add_library(beman_optional26 INTERFACE)
+# Create the library target and named header set for beman_optional
+add_library(beman_optional INTERFACE)
 target_sources(
-    beman_optional26
-    PUBLIC FILE_SET beman_optional26_headers TYPE HEADERS BASE_DIRS include
+    beman_optional
+    PUBLIC FILE_SET beman_optional_headers TYPE HEADERS BASE_DIRS include
 )
 
-if(OPTIONAL26_ENABLE_TESTING)
-    # Create the library target and named header set for testing beman_optional26
+if(OPTIONAL_ENABLE_TESTING)
+    # Create the library target and named header set for testing beman_optional
     # and mark the set private
-    add_executable(beman_optional26_test)
+    add_executable(beman_optional_test)
     target_sources(
-        beman_optional26_test
-        PRIVATE
-            FILE_SET beman_optional26_test_headers
-            TYPE HEADERS
-            BASE_DIRS src
+        beman_optional_test
+        PRIVATE FILE_SET beman_optional_test_headers TYPE HEADERS BASE_DIRS src
     )
 
-    add_subdirectory(src/beman/optional26/tests)
+    add_subdirectory(src/beman/optional/tests)
 endif()
 
-add_subdirectory(include/beman/optional26)
+add_subdirectory(include/beman/optional)
 
 add_subdirectory(examples)
 
@@ -65,17 +62,17 @@ include(CMakePackageConfigHelpers)
 set(cmakeModulesDir cmake/beman)
 configure_package_config_file(
     cmake/Config.cmake.in
-    BemanOptional26Config.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman/optional26/
+    BemanOptionalConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman/optional/
     PATH_VARS cmakeModulesDir
     NO_SET_AND_CHECK_MACRO
     NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
 
 install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/BemanOptional26Config.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman/optional26/
-    COMPONENT beman_optional26_development
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/BemanOptionalConfig.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman/optional/
+    COMPONENT beman_optional_development
 )
 
 # Coverage

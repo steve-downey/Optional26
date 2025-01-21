@@ -1,4 +1,4 @@
-// src/beman/optional26/tests/optional_range_support.t.cpp -*-C++-*-
+// src/beman/optional/tests/optional_range_support.t.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 /**
@@ -8,12 +8,12 @@
  *
  * Classes used in the tests: int, pointers, empty, no_default_ctor, base, derived.
  */
-#include <beman/optional26/optional.hpp>
+#include <beman/optional/optional.hpp>
 
 #include <gtest/gtest.h>
 
-#include <beman/optional26/detail/iterator.hpp>
-#include <beman/optional26/tests/test_types.hpp>
+#include <beman/optional/detail/iterator.hpp>
+#include <beman/optional/tests/test_types.hpp>
 
 #include <algorithm>
 #include <concepts>
@@ -61,7 +61,7 @@
     } else                                \
         ASSERT_FALSE(val)
 
-using namespace beman::optional26::tests;
+using namespace beman::optional::tests;
 
 TEST(RangeSupportTest, RangeConcepts) {
     const auto test = [](auto&& opt) {
@@ -82,12 +82,12 @@ TEST(RangeSupportTest, RangeConcepts) {
         static_assert(std::ranges::sized_range<optional>);
     };
 
-    test(beman::optional26::optional<int>{});
-    test(beman::optional26::optional<int*>{});
-    test(beman::optional26::optional<empty>{});
-    test(beman::optional26::optional<no_default_ctor>{});
-    test(beman::optional26::optional<base>{});
-    test(beman::optional26::optional<derived>{});
+    test(beman::optional::optional<int>{});
+    test(beman::optional::optional<int*>{});
+    test(beman::optional::optional<empty>{});
+    test(beman::optional::optional<no_default_ctor>{});
+    test(beman::optional::optional<base>{});
+    test(beman::optional::optional<derived>{});
 }
 
 TEST(RangeSupportTest, IteratorConcepts) {
@@ -115,12 +115,12 @@ TEST(RangeSupportTest, IteratorConcepts) {
         static_assert(std::contiguous_iterator<const_iterator>);
     };
 
-    test(beman::optional26::optional<int>{});
-    test(beman::optional26::optional<int*>{});
-    test(beman::optional26::optional<empty>{});
-    test(beman::optional26::optional<no_default_ctor>{});
-    test(beman::optional26::optional<base>{});
-    test(beman::optional26::optional<derived>{});
+    test(beman::optional::optional<int>{});
+    test(beman::optional::optional<int*>{});
+    test(beman::optional::optional<empty>{});
+    test(beman::optional::optional<no_default_ctor>{});
+    test(beman::optional::optional<base>{});
+    test(beman::optional::optional<derived>{});
 }
 
 TEST(RangeSupportTest, BeginOnEmptyOptional) {
@@ -138,12 +138,12 @@ TEST(RangeSupportTest, BeginOnEmptyOptional) {
             CONSTEXPR_EXPECT_EQ(const_opt.begin(), const_iterator());
         };
 
-        test(beman::optional26::optional<int>{});
-        test(beman::optional26::optional<int*>{});
-        test(beman::optional26::optional<empty>{});
-        test(beman::optional26::optional<no_default_ctor>{});
-        test(beman::optional26::optional<base>{});
-        test(beman::optional26::optional<derived>{});
+        test(beman::optional::optional<int>{});
+        test(beman::optional::optional<int*>{});
+        test(beman::optional::optional<empty>{});
+        test(beman::optional::optional<no_default_ctor>{});
+        test(beman::optional::optional<base>{});
+        test(beman::optional::optional<derived>{});
     };
     static_assert((lambda(), true));
     lambda();
@@ -164,14 +164,14 @@ TEST(RangeSupportTest, BeginOnNonEmptyOptional) {
             CONSTEXPR_EXPECT_EQ(const_opt.begin(), const_iterator(&*opt));
         };
 
-        test(beman::optional26::optional<int>{26});
+        test(beman::optional::optional<int>{26});
         if (!std::is_constant_evaluated()) {
-            test(beman::optional26::optional<int*>{reinterpret_cast<int*>(0XCAFEBABE)});
+            test(beman::optional::optional<int*>{reinterpret_cast<int*>(0XCAFEBABE)});
         }
-        test(beman::optional26::optional<empty>{empty{}});
-        test(beman::optional26::optional<no_default_ctor>{no_default_ctor{empty{}}});
-        test(beman::optional26::optional<base>{base{}});
-        test(beman::optional26::optional<derived>{derived{}});
+        test(beman::optional::optional<empty>{empty{}});
+        test(beman::optional::optional<no_default_ctor>{no_default_ctor{empty{}}});
+        test(beman::optional::optional<base>{base{}});
+        test(beman::optional::optional<derived>{derived{}});
     };
     static_assert((lambda(), true));
     lambda();
@@ -192,12 +192,12 @@ TEST(RangeSupportTest, EndOnEmptyOptional) {
             CONSTEXPR_EXPECT_EQ(const_opt.end(), const_iterator());
         };
 
-        test(beman::optional26::optional<int>{});
-        test(beman::optional26::optional<int*>{});
-        test(beman::optional26::optional<empty>{});
-        test(beman::optional26::optional<no_default_ctor>{});
-        test(beman::optional26::optional<base>{});
-        test(beman::optional26::optional<derived>{});
+        test(beman::optional::optional<int>{});
+        test(beman::optional::optional<int*>{});
+        test(beman::optional::optional<empty>{});
+        test(beman::optional::optional<no_default_ctor>{});
+        test(beman::optional::optional<base>{});
+        test(beman::optional::optional<derived>{});
     };
     static_assert((lambda(), true));
     lambda();
@@ -218,14 +218,14 @@ TEST(RangeSupportTest, EndOnNonEmptyOptional) {
             CONSTEXPR_EXPECT_EQ(const_opt.end(), const_iterator(&*opt + 1));
         };
 
-        test(beman::optional26::optional<int>{26});
+        test(beman::optional::optional<int>{26});
         if (!std::is_constant_evaluated()) {
-            test(beman::optional26::optional<int*>{reinterpret_cast<int*>(0XCAFEBABE)});
+            test(beman::optional::optional<int*>{reinterpret_cast<int*>(0XCAFEBABE)});
         }
-        test(beman::optional26::optional<empty>{empty{}});
-        test(beman::optional26::optional<no_default_ctor>{no_default_ctor{empty{}}});
-        test(beman::optional26::optional<base>{base{}});
-        test(beman::optional26::optional<derived>{derived{}});
+        test(beman::optional::optional<empty>{empty{}});
+        test(beman::optional::optional<no_default_ctor>{no_default_ctor{empty{}}});
+        test(beman::optional::optional<base>{base{}});
+        test(beman::optional::optional<derived>{derived{}});
     };
     static_assert((lambda(), true));
     lambda();
@@ -234,17 +234,17 @@ TEST(RangeSupportTest, EndOnNonEmptyOptional) {
 TEST(RangeSupportTest, FormatOptionalIsStillDisabled) {
 // TODO: Always enable when all major compilers implement P2585R1: "Improve default container formatting".
 #if defined(__cpp_lib_format_ranges)
-    static_assert(std::format_kind<beman::optional26::optional<int>> == std::range_format::disabled);
-    EXPECT_EQ(std::format_kind<beman::optional26::optional<int>>, std::range_format::disabled);
+    static_assert(std::format_kind<beman::optional::optional<int>> == std::range_format::disabled);
+    EXPECT_EQ(std::format_kind<beman::optional::optional<int>>, std::range_format::disabled);
 
     // Next line should not compile: formatter is not defined for optional.
-    // EXPECT_EQ(std::format("{}", beman::optional26::optional<int> {}), "[]");
+    // EXPECT_EQ(std::format("{}", beman::optional::optional<int> {}), "[]");
 #endif
 }
 
 TEST(RangeSupportTest, LoopOverEmptyRange) {
     auto lambda = [&] {
-        beman::optional26::optional<int> empty;
+        beman::optional::optional<int> empty;
         CONSTEXPR_ASSERT_FALSE(empty.has_value());
 
         for ([[maybe_unused]] auto _ : empty) {
@@ -257,8 +257,8 @@ TEST(RangeSupportTest, LoopOverEmptyRange) {
 
 TEST(RangeSupportTest, LoopOverNonEmptyRange) {
     auto lambda = [&] {
-        const auto                       expected_value = 0xCAFEBABE;
-        beman::optional26::optional<int> empty{expected_value};
+        const auto                     expected_value = 0xCAFEBABE;
+        beman::optional::optional<int> empty{expected_value};
         CONSTEXPR_ASSERT_TRUE(empty.has_value());
 
         bool entered_loop = false;
@@ -276,7 +276,7 @@ TEST(RangeSupportTest, LoopOptionalAccess) {
     auto lambda = [&] {
         // Example from P3168R2: should access the value from an optional object.
         const int  expected_value = 0xCAFEBABE;
-        const auto get_optional   = [&]() -> beman::optional26::optional<int> { return expected_value; };
+        const auto get_optional   = [&]() -> beman::optional::optional<int> { return expected_value; };
         CONSTEXPR_ASSERT_TRUE(get_optional().has_value());
 
         for (auto&& opt : get_optional()) {
@@ -292,7 +292,7 @@ TEST(RangeSupportTest, LoopOptionalAssignment) {
         // Example from P3168R2: should mutate the value from an optional object.
         const int  initial_expected_value = 0xCAFEBABE;
         const int  expected_value         = 0xDEADBEEF;
-        const auto get_optional = [&]() -> beman::optional26::optional<int> { return initial_expected_value; };
+        const auto get_optional           = [&]() -> beman::optional::optional<int> { return initial_expected_value; };
         CONSTEXPR_ASSERT_TRUE(get_optional().has_value());
         CONSTEXPR_ASSERT_TRUE(get_optional().value() == initial_expected_value);
 
@@ -311,7 +311,7 @@ TEST(RangeSupportTest, LoopOptionalAssignment) {
 TEST(RangeSupportTest, RangeChainExample) {
     // Example from P3168R2: start from a set of values, apply multiple range operations involving optional values.
     std::unordered_set<int> s{1, 3, 7, 9};
-    const auto              flt = [&](int i) -> beman::optional26::optional<int> {
+    const auto              flt = [&](int i) -> beman::optional::optional<int> {
         if (s.contains(i)) {
             return i;
         } else {
@@ -334,8 +334,8 @@ TEST(RangeSupportTest, PythagoreanTriples) {
     auto lambda = [&] {
         // Example from P3168R2: generate an infinite sequence of Pythagorean triples.
         // (x, y, z) is a Pythagorean triple if 1 <= x <= y <= z and x^2 + y^2 = z^2.
-        constexpr auto yield_if = []<class T>(bool b, T x) -> beman::optional26::optional<T> {
-            return b ? beman::optional26::optional<T>{std::move(x)} : beman::optional26::nullopt;
+        constexpr auto yield_if = []<class T>(bool b, T x) -> beman::optional::optional<T> {
+            return b ? beman::optional::optional<T>{std::move(x)} : beman::optional::nullopt;
         };
         constexpr auto and_then = []<class T>(T&& r, auto fun) {
             return decltype(r)(r) | std::views::transform(std::move(fun)) | std::views::join;

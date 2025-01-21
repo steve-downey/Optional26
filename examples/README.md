@@ -1,14 +1,14 @@
-# Examples for beman.optional26
+# Examples for beman.optional
 
 <!--
 SPDX-License-Identifier: 2.0 license with LLVM exceptions
 -->
 
-List of usage examples for `beman.optional26`.
+List of usage examples for `beman.optional`.
 
 ## Samples
 
-Check basic `beman.optional26` library usages:
+Check basic `beman.optional` library usages:
 
 * local [./sample.cpp](./sample.cpp) or [sample.cpp@Compiler Explorer](https://godbolt.org/z/47vGje65x)
 * local [./std_vs_beman.cpp](./std_vs_beman.cpp) or [std_vs_beman.cpp@Compiler Explorer](https://godbolt.org/z/ds5MvfGe6)

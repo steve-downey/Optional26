@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <optional>
-#include <beman/optional26/optional.hpp>
+#include <beman/optional/optional.hpp>
 
 #include <concepts>
 
@@ -85,13 +85,13 @@ int main() {
     }
 
     {
-        // beman::optional26::optional meets range concepts.
-        test_concepts_enabled(beman::optional26::optional<int>{});
-        test_concepts_enabled(beman::optional26::optional<int*>{});
-        test_concepts_enabled(beman::optional26::optional<test::empty>{});
-        test_concepts_enabled(beman::optional26::optional<test::no_default_ctor>{});
-        test_concepts_enabled(beman::optional26::optional<test::base>{});
-        test_concepts_enabled(beman::optional26::optional<test::derived>{});
+        // beman::optional::optional meets range concepts.
+        test_concepts_enabled(beman::optional::optional<int>{});
+        test_concepts_enabled(beman::optional::optional<int*>{});
+        test_concepts_enabled(beman::optional::optional<test::empty>{});
+        test_concepts_enabled(beman::optional::optional<test::no_default_ctor>{});
+        test_concepts_enabled(beman::optional::optional<test::base>{});
+        test_concepts_enabled(beman::optional::optional<test::derived>{});
     }
 
     return 0;

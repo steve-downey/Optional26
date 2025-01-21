@@ -1,8 +1,8 @@
-// include/beman/optional26/optional.hpp -*-C++-*-
+// include/beman/optional/optional.hpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef BEMAN_OPTIONAL26_OPTIONAL_HPP
-#define BEMAN_OPTIONAL26_OPTIONAL_HPP
+#ifndef BEMAN_OPTIONAL_OPTIONAL_HPP
+#define BEMAN_OPTIONAL_OPTIONAL_HPP
 
 #include <compare>
 #include <concepts>
@@ -14,9 +14,9 @@
 #include <type_traits>
 #include <utility>
 
-#include <beman/optional26/detail/iterator.hpp>
+#include <beman/optional/detail/iterator.hpp>
 
-namespace beman::optional26 {
+namespace beman::optional {
 
 namespace detail {
 template <typename T, typename U>
@@ -56,28 +56,28 @@ struct in_place_t {
 
 inline constexpr in_place_t in_place{};
 
-} // namespace beman::optional26
+} // namespace beman::optional
 
-namespace beman::optional26 {
+namespace beman::optional {
 template <class T>
 class optional; // partially freestanding
-} // namespace beman::optional26
+} // namespace beman::optional
 
 // Since P3168R2: Give std::optional Range Support.
 template <class T>
-inline constexpr bool std::ranges::enable_view<beman::optional26::optional<T>> = true;
+inline constexpr bool std::ranges::enable_view<beman::optional::optional<T>> = true;
 
 // Iterators for optional<T&> have life times that are not tied to the optional.
 template <class T>
-inline constexpr bool std::ranges::enable_borrowed_range<beman::optional26::optional<T>> = std::is_reference_v<T>;
+inline constexpr bool std::ranges::enable_borrowed_range<beman::optional::optional<T>> = std::is_reference_v<T>;
 
 // Since P3168R2: Give std::optional Range Support.
 #if defined(__cpp_lib_format_ranges)
 template <class T>
-inline constexpr auto std::format_kind<beman::optional26::optional<T>> = range_format::disabled;
+inline constexpr auto std::format_kind<beman::optional::optional<T>> = range_format::disabled;
 #endif
 
-namespace beman::optional26 {
+namespace beman::optional {
 template <class T>
 concept is_derived_from_optional = requires(const T& t) { // exposition only
     []<class U>(const optional<U>&) {}(t);
@@ -1432,17 +1432,16 @@ template <class T>
 constexpr void optional<T&>::reset() noexcept {
     value_ = nullptr;
 }
-} // namespace beman::optional26
+} // namespace beman::optional
 
 namespace std {
 template <typename T>
     requires requires(T a) {
         { std::hash<remove_const_t<T>>{}(a) } -> std::convertible_to<std::size_t>;
     }
-struct hash<beman::optional26::optional<T>> {
+struct hash<beman::optional::optional<T>> {
     static_assert(!is_reference_v<T>, "hash is not enabled for reference types");
-    size_t operator()(const beman::optional26::optional<T>& o) const
-        noexcept(noexcept(hash<remove_const_t<T>>{}(*o))) {
+    size_t operator()(const beman::optional::optional<T>& o) const noexcept(noexcept(hash<remove_const_t<T>>{}(*o))) {
         if (o) {
             return std::hash<std::remove_const_t<T>>{}(*o);
         } else {
@@ -1452,4 +1451,4 @@ struct hash<beman::optional26::optional<T>> {
 };
 } // namespace std
 
-#endif // BEMAN_OPTIONAL26_OPTIONAL_HPP
+#endif // BEMAN_OPTIONAL_OPTIONAL_HPP

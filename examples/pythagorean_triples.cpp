@@ -1,7 +1,7 @@
 // examples/pythagorean_triples.cpp -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/optional26/optional.hpp>
+#include <beman/optional/optional.hpp>
 
 #include <algorithm>
 #include <cassert>
@@ -12,8 +12,8 @@
 int main() {
     // Example from P3168R2: generate an infinite sequence of Pythagorean triples.
     // (x, y, z) is a Pythagorean triple if 1 <= x <= y <= z and x^2 + y^2 = z^2.
-    constexpr auto yield_if = []<class T>(bool b, T x) -> beman::optional26::optional<T> {
-        return b ? beman::optional26::optional<T>{std::move(x)} : beman::optional26::nullopt;
+    constexpr auto yield_if = []<class T>(bool b, T x) -> beman::optional::optional<T> {
+        return b ? beman::optional::optional<T>{std::move(x)} : beman::optional::nullopt;
     };
     constexpr auto and_then = []<class T>(T&& r, auto fun) {
         return decltype(r)(r) | std::views::transform(std::move(fun)) | std::views::join;
